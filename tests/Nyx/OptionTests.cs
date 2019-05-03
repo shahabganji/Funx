@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Xunit;
 using static Nyx.Helpers.OptionHelpers;
 
@@ -25,11 +26,51 @@ namespace Nyx.Tests
         }
 
         [Fact]
+        public async Task WhenNoneMatchAsyncMethodShouldCallNoneFuncAsync()
+        {
+            Option<string> noneOpt = None;
+
+            Task<bool> NoneFuncAsync()
+            {
+                return Task.FromResult(true);
+            }
+
+            Task<bool> SomeFuncAsync(string vs)
+            {
+                return Task.FromResult(false);
+            }
+
+            var noneCalled = await noneOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync);
+
+            Assert.True(noneCalled);
+        }
+
+        [Fact]
         public void WhenNoneMatchMethodShouldCallNoneFunc()
         {
             Option<string> noneOpt = None;
 
             var noneCalled = noneOpt.Match(() => true, v => false);
+
+            Assert.True(noneCalled);
+        }
+
+        [Fact]
+        public async Task WhenSomeMatchAsyncMethodShouldNotCallNoneFuncAsync()
+        {
+            Option<string> someOpt = Some("fake");
+
+            Task<bool> NoneFuncAsync()
+            {
+                return Task.FromResult(false);
+            }
+
+            Task<bool> SomeFuncAsync(string vs)
+            {
+                return Task.FromResult(true);
+            }
+
+            var noneCalled = await someOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync);
 
             Assert.True(noneCalled);
         }
