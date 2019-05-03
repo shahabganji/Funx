@@ -2,6 +2,6 @@ namespace Nyx.Option
 {
     public class None
     {
-        internal static None Default = new None();
+        internal static readonly None Default = new None();
     }
 }
