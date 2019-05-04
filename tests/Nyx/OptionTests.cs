@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using static Nyx.Helpers.OptionHelpers;
@@ -90,5 +92,19 @@ namespace Nyx.Tests
         {
             Assert.Throws<ArgumentNullException>(() => { _ = Some<string>(null); });
         }
+
+        [Fact]
+        public void ShouldReturnIEnumerableWithValuesWhenOptionIsSome()
+        {
+            Option<string> someOption = "fake";
+
+            var enumerable = someOption.AsEnumerable();
+
+            var count = enumerable.Count();
+            
+            Assert.Equal(1 , count);
+            Assert.IsAssignableFrom<IEnumerable<string>>(enumerable);
+        }
+        
     }
 }

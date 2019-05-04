@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nyx.Helpers;
 using Nyx.Option;
@@ -6,15 +7,10 @@ using static Nyx.Helpers.OptionHelpers;
 
 namespace Nyx
 {
-    public class Option<T>
+    public struct Option<T>
     {
         private readonly bool _isSome;
-
         private readonly T _value;
-
-        private Option()
-        {
-        }
 
         private Option(T value)
         {
@@ -42,9 +38,16 @@ namespace Nyx
             return _isSome ? some(_value) : none();
         }
 
-        public Task<R> MatchAsync<R>(Func<Task<R>> none, Func<T, Task<R>> some)
+        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, Task<TR>> someAsync)
         {
-            return _isSome ? some(_value) : none();
+            return _isSome ? someAsync(_value) : noneAsync();
         }
+        
+        public IEnumerable<T> AsEnumerable()
+        {
+            if (this._isSome)
+                yield return this._value;
+        }
+        
     }
 }
