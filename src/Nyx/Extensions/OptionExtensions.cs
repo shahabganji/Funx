@@ -16,7 +16,7 @@ namespace Nyx.Extensions {
 
             Task.Run(async() => {
                 try {
-                    var result = await option.MatchAsync<Option<TR>>(
+                    var result = await option.MatchAsync(
                         () => Task.FromResult<Option<TR>>(None),
                         async t => {
                             var mapped = await funcAsync(t).ConfigureAwait(false);

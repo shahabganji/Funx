@@ -14,7 +14,6 @@ namespace Nyx.Tests
         {
             Option<bool> option = None;
 
-            Assert.NotNull(option);
             Assert.IsType<Option<bool>>(option);
         }
 
@@ -23,7 +22,6 @@ namespace Nyx.Tests
         {
             Option<bool> option = Some(true);
 
-            Assert.NotNull(option);
             Assert.IsType<Option<bool>>(option);
         }
 
