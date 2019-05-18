@@ -6,9 +6,11 @@ using Nyx.Option;
 using static Nyx.Helpers.OptionHelpers;
 
 namespace Nyx {
-    public struct Option<T> {
+    public struct Option<T> : IEquatable<None>, IEquatable<Option<T>> {
         private readonly bool _isSome;
         private readonly T _value;
+
+        private bool IsNone => !_isSome;
 
         private Option(T value) {
             _value = value;
@@ -40,5 +42,35 @@ namespace Nyx {
                 yield return this._value;
         }
 
+        public bool Equals(None other) => IsNone;
+        public bool Equals(Option<T> other)
+            => _isSome == other._isSome && (IsNone || this._value.Equals(other._value));
+
+        public static bool operator ==(Option<T> @this, Option<T> other)
+            => @this.Equals(other);
+        public static bool operator !=(Option<T> @this, Option<T> other)
+            => !(@this == other);
+        
+//        public static bool operator ==(Option<T> @this, T other)
+//            => @this.Equals(other);
+//        public static bool operator !=(Option<T> @this, T other)
+//            => !(@this == other);
+//        
+//        public static bool operator ==(T other,Option<T> @this)
+//            => @this.Equals(other);
+//        public static bool operator !=(T other,Option<T> @this)
+//            => !(@this == other);
+
+//        public override bool Equals(object obj)
+//        {
+//            if (IsNone && obj == null) return true;
+//
+//            var other = Some(obj);
+//
+//            return this.Equals(other);
+//        }
+
+        public override string ToString()
+            => this._isSome ? $"Some({_value})" : "None";
     }
 }

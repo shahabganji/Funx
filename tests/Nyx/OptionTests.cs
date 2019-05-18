@@ -103,6 +103,56 @@ namespace Nyx.Tests
             Assert.Equal(1 , count);
             Assert.IsAssignableFrom<IEnumerable<string>>(enumerable);
         }
+
+
+        [Fact]
+        public void ShouldTwoNoneValuesOrNullBeEqual()
+        {
+            var first = (Option<int>) None;
+            var other = (Option<int>) None;
+
+            var actual = first.Equals(other);
+            
+            Assert.True(actual);
+        }
         
+        [Fact]
+        public void ShouldNoneAndSomeNotBeEqual()
+        {
+            var first = (Option<int>) None;
+            var other = Some(1);
+
+            var actual = first.Equals(other);
+            
+            Assert.False(actual);
+        }
+        
+        [Fact]
+        public void ShouldEqualityOperatorReturnTrueOnOptionTypes()
+        {
+            var firstNone = (Option<int>) None;
+            var otherNone = (Option<int>) None;
+
+            var actualNone = firstNone == otherNone;
+
+            var firstSome = Some(1);
+            var otherSome = Some(1);
+
+            var actualSome = firstSome == otherSome;
+            
+            Assert.True(actualNone);
+            Assert.True(actualSome);
+        }
+        
+        [Fact]
+        public void ShouldEqualityOperatorReturnTrueOnOptionAndPrimitiveTypes()
+        {
+            var firstSome = Some(1);
+            var other = 1;
+
+            var actualSome = firstSome == other;
+            
+            Assert.True(actualSome);
+        }
     }
 }
