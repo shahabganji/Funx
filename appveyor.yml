@@ -1,0 +1,40 @@
+version: '1.0.{build}'
+image: Visual Studio 2019
+skip_branch_with_pr: true
+configuration: Release
+platform: Any CPU
+build:
+  verbosity: normal
+test:
+  assemblies:
+    only:
+      - ./tests/Nyx.Tests
+branches:
+  only:
+    - master
+init:
+  # Good practise, because Windows line endings are different from Unix/Linux ones
+  - cmd: git config --global core.autocrlf true
+install:
+# Install repo specific stuff here
+before_build:
+  # Display .NET Core version
+  - cmd: dotnet --version
+  # Display minimal restore text
+  - cmd: dotnet restore ./src/src.csproj --verbosity m
+build_script:
+  # output will be in ./src/bin/release/netcoreapp2.0/publish
+  - cmd: dotnet publish ./src/Nyx.csproj -c Release 
+after_build:
+# For once the build has completed
+clone_depth: 1
+test_script:
+  # restore packages for our unit tests
+  - cmd: dotnet restore ./tests/tests.csproj --verbosity m
+  # run the unit tests (requires changing into the test directory)
+  - cmd: cd tests
+  - cmd: dotnet Nyx.Tests --verbosity normal
+deploy:
+  - provider: NuGet
+    api_key:
+      secure: UNhG2ePtkOWC4kyxRzHWPVYv5GM+QgT1/8S3aVsU3Vyrhag1VnzaN7jUe7vxcZZJ
