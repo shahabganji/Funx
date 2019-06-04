@@ -1,17 +1,60 @@
-version: '1.0.{build}'
-image: Visual Studio 2019
-skip_branch_with_pr: true
+version: '1.0-build.{build}'
+image: Visual Studio 2017
+#skip_branch_with_pr: true
 configuration: Release
-platform: x64
+platform:
+  - Any CPU
+
+branches:
+  only:
+    - /\d*\.\d*\.\d*/
+#    - master
+#    - develop
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: $(APPVEYOR_REPO_TAG_NAME)
+  package_version: $(APPVEYOR_REPO_TAG_NAME)
+  assembly_version: $(APPVEYOR_REPO_TAG_NAME)
+  file_version: $(APPVEYOR_REPO_TAG_NAME)
+  informational_version: $(APPVEYOR_REPO_TAG_NAME)
+
+#clone_folder: /var/appveyor/umfrage
+
 init:
+  - ps: git config --global core.autocrlf input
+  - ps: dotnet nuget locals http-cache -c
+
+before_build:
   - ps: ls
-build:
-  verbosity: normal
-test:
-  assemblies:
-    only:
-      - ./tests/Nyx.Tests
+  - ps: dotnet restore
+
+build_script:
+  - ps: dotnet build src/Nyx/Nyx.csproj --verbosity m
+
+test_script:
+  - ps: dotnet test tests/Nyx/Nyx.Test.csproj --verbosity normal
+
+after_test:
+  - ps: dotnet pack src/Nyx/Nyx.csproj --no-restore --no-build -c Release -o ../../publish
+  - ps: ls publish
+#  - appveyor PushArtifact publish/Umfrage.1.0.0.nupkg
+#  - appveyor PushArtifact publish/Umfrage.Extensions.1.0.0.nupkg
+
+artifacts:
+  - path: '**\*.nupkg'
+
 deploy:
-  - provider: NuGet
-    api_key:
-      secure: UNhG2ePtkOWC4kyxRzHWPVYv5GM+QgT1/8S3aVsU3Vyrhag1VnzaN7jUe7vxcZZJ
+  provider: NuGet
+  api_key:
+    secure: 1mdi2SiGn3xkp9/LhAaeBi032LeQ2fOuKFNm06P++VhPTcHbbv+AsA73iraxGT2S
+  skip_symbols: false
+  artifact: /.*\.nupkg/
+
+
+on_success:
+  - ps: Write-Host "All Done" -ForegroundColor DarkGreen -BackgroundColor White
+
+#  APPVEYOR_REPO_TAG
+#  APPVEYOR_REPO_TAG_NAME
