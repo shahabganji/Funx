@@ -7,7 +7,7 @@ platform:
 
 branches:
   only:
-    - /v\d*\.\d*\.\d*/
+    - /\d*\.\d*\.\d*/
 #    - master
 #    - develop
 
