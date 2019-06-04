@@ -1,4 +1,4 @@
-version: '1.0-build.{build}'
+version: '1.0-build_{build}'
 image: Visual Studio 2017
 #skip_branch_with_pr: true
 configuration: Release
@@ -39,8 +39,7 @@ test_script:
 after_test:
   - ps: dotnet pack src/Nyx/Nyx.csproj --no-restore --no-build -c Release -o ../../publish
   - ps: ls publish
-#  - appveyor PushArtifact publish/Umfrage.1.0.0.nupkg
-#  - appveyor PushArtifact publish/Umfrage.Extensions.1.0.0.nupkg
+#  - appveyor PushArtifact publish/Nyx.1.0.0.nupkg
 
 artifacts:
   - path: '**\*.nupkg'
