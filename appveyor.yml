@@ -34,7 +34,7 @@ build_script:
   - ps: dotnet build src/Nyx/Nyx.csproj --verbosity m
 
 test_script:
-  - ps: dotnet test tests/Nyx/Nyx.Test.csproj --verbosity normal
+  - ps: dotnet test tests/Nyx/Nyx.Tests.csproj --verbosity normal
 
 after_test:
   - ps: dotnet pack src/Nyx/Nyx.csproj --no-restore --no-build -c Release -o ../../publish
