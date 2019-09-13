@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Nyx.Extensions;
+using Funx.Extensions;
 using Xunit;
 
-namespace Nyx.Tests.Extensions
+namespace Funx.Tests.Extensions
 {
     public class DictionaryExtensionsTests
     {

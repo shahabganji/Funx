@@ -1,6 +1,6 @@
 using System;
 
-namespace Nyx.Option {
+namespace Funx.Option {
     public class Some<T> {
         internal T Value { get; }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Nyx.Tests.Mocks
+namespace Funx.Tests.Mocks
 {
     class Subject
     {

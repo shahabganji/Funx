@@ -1,4 +1,4 @@
-namespace Nyx.Option
+namespace Funx.Option
 {
     public class None
     {

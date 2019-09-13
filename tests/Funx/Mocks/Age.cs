@@ -1,7 +1,7 @@
 ﻿using System;
-using static Nyx.Helpers.OptionHelpers;
+using static Funx.Helpers.OptionHelpers;
 
-namespace Nyx.Tests.Mocks
+namespace Funx.Tests.Mocks
 {
     class Age
     {

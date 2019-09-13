@@ -1,6 +1,6 @@
-using Nyx.Option;
+using Funx.Option;
 
-namespace Nyx.Helpers
+namespace Funx.Helpers
 {
     public static class OptionHelpers
     {

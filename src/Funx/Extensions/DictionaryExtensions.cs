@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using static Nyx.Helpers.OptionHelpers;
+using static Funx.Helpers.OptionHelpers;
 
 
-namespace Nyx.Extensions
+namespace Funx.Extensions
 {
     public static class DictionaryExtensions
     {

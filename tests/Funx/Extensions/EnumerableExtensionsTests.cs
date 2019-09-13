@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Nyx.Extensions;
-using Nyx.Tests.Mocks;
+using Funx.Extensions;
+using Funx.Tests.Mocks;
 using Xunit;
 
-namespace Nyx.Tests.Extensions
+namespace Funx.Tests.Extensions
 {
     public class EnumerableExtensionsTests
     {

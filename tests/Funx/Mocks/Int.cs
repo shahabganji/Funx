@@ -1,7 +1,7 @@
 ﻿
-using static Nyx.Helpers.OptionHelpers;
+using static Funx.Helpers.OptionHelpers;
 
-namespace Nyx.Tests.Mocks
+namespace Funx.Tests.Mocks
 {
     static class Int
     {

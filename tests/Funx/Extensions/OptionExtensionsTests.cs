@@ -1,10 +1,10 @@
 using System;
-using Nyx.Extensions;
+using Funx.Extensions;
 using Xunit;
 
-using static Nyx.Helpers.OptionHelpers;
+using static Funx.Helpers.OptionHelpers;
 
-namespace Nyx.Tests.Extensions
+namespace Funx.Tests.Extensions
 {
     public class OptionExtensionsTests
     {

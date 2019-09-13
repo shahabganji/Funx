@@ -1,8 +1,8 @@
 using System;
-using Nyx.Extensions;
+using Funx.Extensions;
 using Xunit;
 
-namespace Nyx.Tests.Extensions
+namespace Funx.Tests.Extensions
 {
     public class ActionExtensionsTests
     {

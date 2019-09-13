@@ -1,6 +1,6 @@
 using System.Collections.Specialized;
 
-namespace Nyx.Extensions
+namespace Funx.Extensions
 {
     public static class NameValueCollectionExtensions
     {

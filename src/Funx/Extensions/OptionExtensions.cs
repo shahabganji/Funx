@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using static Nyx.Helpers.OptionHelpers;
+using static Funx.Helpers.OptionHelpers;
 using Unit = System.ValueTuple;
 
-namespace Nyx.Extensions
+namespace Funx.Extensions
 {
     public static class OptionExtensions
     {

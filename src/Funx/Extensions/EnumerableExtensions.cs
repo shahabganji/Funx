@@ -5,7 +5,7 @@ using System.Linq;
 
 using Unit = System.ValueTuple;
 
-namespace Nyx.Extensions
+namespace Funx.Extensions
 {
     public static class EnumerableExtensions
     {

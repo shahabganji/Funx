@@ -1,7 +1,7 @@
 using System;
 using Unit = System.ValueTuple;
 
-namespace Nyx.Extensions
+namespace Funx.Extensions
 {
     public static class ActionExtensions
     {
