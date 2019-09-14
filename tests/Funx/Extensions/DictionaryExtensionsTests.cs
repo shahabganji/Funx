@@ -59,7 +59,7 @@ namespace Funx.Tests.Extensions
         }
 
         [Fact]
-        public void ShouldReturnNoneWhenValueDoesNotExistsForConcurentDictionary()
+        public void ShouldReturnNoneWhenValueDoesNotExistsForConcurrentDictionary()
         {
             var dictionary = new ConcurrentDictionary<int, string>();
 

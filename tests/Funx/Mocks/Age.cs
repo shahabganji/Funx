@@ -1,5 +1,5 @@
 ﻿using System;
-using static Funx.Helpers.OptionHelpers;
+using static Funx.Helpers;
 
 namespace Funx.Tests.Mocks
 {
@@ -23,12 +23,13 @@ namespace Funx.Tests.Mocks
             return new Age(age);
         }
 
-        private Age() { }
+        private Age()
+        {
+        }
 
         private Age(int age)
         {
             this.Value = age;
         }
-
     }
 }

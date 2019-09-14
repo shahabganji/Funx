@@ -1,14 +1,11 @@
-using System;
 using Funx.Extensions;
 using Xunit;
-
-using static Funx.Helpers.OptionHelpers;
+using static Funx.Helpers;
 
 namespace Funx.Tests.Extensions
 {
     public class OptionExtensionsTests
     {
-
         [Fact]
         public void ShouldReturnNoneWhenPredicateReturnsFalse()
         {
@@ -17,10 +14,10 @@ namespace Funx.Tests.Extensions
             var evenNumber = Some(2);
 
             var actual = evenNumber.Where(IsOdd);
-            
+
             Assert.Equal(actual, None);
         }
-        
+
         [Fact]
         public void ShouldReturnSomeWhenPredicateReturnsFalse()
         {
@@ -29,9 +26,8 @@ namespace Funx.Tests.Extensions
             var evenNumber = Some(2);
 
             var actual = evenNumber.Where(IsOdd);
-            
+
             Assert.Equal(actual, evenNumber);
         }
-        
     }
 }

@@ -1,7 +1,7 @@
 using System;
 
 namespace Funx.Option {
-    public class Some<T> {
+    public struct Some<T> {
         internal T Value { get; }
 
         internal Some(T value) {

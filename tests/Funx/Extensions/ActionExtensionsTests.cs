@@ -1,5 +1,5 @@
-using System;
 using Funx.Extensions;
+using System;
 using Xunit;
 
 namespace Funx.Tests.Extensions

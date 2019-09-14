@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static Funx.Helpers.OptionHelpers;
+using static Funx.Helpers;
 
 namespace Funx.Tests
 {
@@ -99,8 +99,8 @@ namespace Funx.Tests
             var enumerable = someOption.AsEnumerable();
 
             var count = enumerable.Count();
-            
-            Assert.Equal(1 , count);
+
+            Assert.Equal(1, count);
             Assert.IsAssignableFrom<IEnumerable<string>>(enumerable);
         }
 
@@ -112,10 +112,10 @@ namespace Funx.Tests
             var other = (Option<int>) None;
 
             var actual = first.Equals(other);
-            
+
             Assert.True(actual);
         }
-        
+
         [Fact]
         public void ShouldNoneAndSomeNotBeEqual()
         {
@@ -123,10 +123,10 @@ namespace Funx.Tests
             var other = Some(1);
 
             var actual = first.Equals(other);
-            
+
             Assert.False(actual);
         }
-        
+
         [Fact]
         public void ShouldEqualityOperatorReturnTrueOnOptionTypes()
         {
@@ -139,11 +139,11 @@ namespace Funx.Tests
             var otherSome = Some(1);
 
             var actualSome = firstSome == otherSome;
-            
+
             Assert.True(actualNone);
             Assert.True(actualSome);
         }
-        
+
         [Fact]
         public void ShouldEqualityOperatorReturnTrueOnOptionAndPrimitiveTypes()
         {
@@ -151,7 +151,7 @@ namespace Funx.Tests
             var other = 1;
 
             var actualSome = firstSome == other;
-            
+
             Assert.True(actualSome);
         }
     }

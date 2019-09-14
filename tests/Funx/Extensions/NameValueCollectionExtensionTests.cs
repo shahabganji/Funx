@@ -1,7 +1,5 @@
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using Funx.Extensions;
+using System.Collections.Specialized;
 using Xunit;
 
 namespace Funx.Tests.Extensions
@@ -11,10 +9,12 @@ namespace Funx.Tests.Extensions
         [Fact]
         public void ShouldReturnAnOptionWhenValueExists()
         {
-            var dictionary = new NameValueCollection();
+            var dictionary = new NameValueCollection
+            {
+                {"One", "First"},
+                {"Two", "Second"}
+            };
 
-            dictionary.Add("One", "First");
-            dictionary.Add("Two", "Second");
 
             var result = dictionary.Lookup("One");
 
@@ -28,10 +28,12 @@ namespace Funx.Tests.Extensions
         [Fact]
         public void ShouldReturnNoneWhenValueDoesNotExists()
         {
-            var dictionary = new NameValueCollection();
+            var dictionary = new NameValueCollection
+            {
+                {"One", "First"},
+                {"Two", "Second"}
+            };
 
-            dictionary.Add("One", "First");
-            dictionary.Add("Two", "Second");
 
             var result = dictionary.Lookup("Three");
 
@@ -41,7 +43,5 @@ namespace Funx.Tests.Extensions
                 return true;
             }, null);
         }
-        
-        
     }
 }

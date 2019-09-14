@@ -1,20 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using static Funx.Helpers.OptionHelpers;
+using static Funx.Helpers;
 using Unit = System.ValueTuple;
 
 namespace Funx.Extensions
 {
     public static class OptionExtensions
     {
-        public static Option<TR> Map<T, TR>(this Option<T> option, Func<T, TR> func) => option.Match(
-            () => None,
-            value => Some(func(value))
-        );
+        public static Option<TR> Map<T, TR>(this Option<T> option, Func<T, TR> func) =>
+            option.Match(
+                () => None,
+                value => Some(func(value))
+            );
 
         public static Task<Option<TR>> MapAsync<T, TR>(this Option<T> option, Func<T, Task<TR>> funcAsync)
         {
-            TaskCompletionSource<Option<TR>> tcs = new TaskCompletionSource<Option<TR>>();
+            var tcs = new TaskCompletionSource<Option<TR>>();
 
             Task.Run(async () =>
             {
@@ -38,6 +40,12 @@ namespace Funx.Extensions
 
             return tcs.Task;
         }
+
+        public static IEnumerable<TR> Bind<T, TR>(this IEnumerable<T> list, Func<T, Option<TR>> func)
+            => list.Bind(x => func(x).AsEnumerable());
+
+        public static IEnumerable<TR> Bind<T, TR>(this Option<T> option, Func<T, IEnumerable<TR>> func)
+            => option.AsEnumerable().Bind(func);
 
         public static Option<T> Where<T>(this Option<T> @this, Func<T, bool> predicate)
             => @this.Match(() => None, t => predicate(t) ? Some(t) : None);
