@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,6 +11,21 @@ namespace Funx.Tests.Extensions
 {
     public class EnumerableExtensionsTests
     {
+        [Fact]
+        public void ShouldMapAndSelectBeIdentical()
+        {
+            var numbers = Enumerable.Range(0, 10).ToArray();
+
+            bool LessThanFive(int i) => i < 5;
+
+            var selectResults = numbers.Select(LessThanFive).ToArray();
+            var mapResult = numbers.Map(LessThanFive).ToArray();
+
+            Assert.Equal(selectResults.Count(), mapResult.Count());
+
+            selectResults.ForEach((item,index) => Assert.Equal(item, mapResult[index]));
+        }
+
         [Fact]
         public void ShouldBindAndSelectManyBeIdentical()
         {
@@ -24,14 +40,13 @@ namespace Funx.Tests.Extensions
             var bindItems = population.Bind(x => x.Age).ToArray();
 
             Assert.Equal(manyItems.Count(), bindItems.Count());
-            for (int i = 0; i < manyItems.Count(); i++)
-            {
-                Assert.Equal(manyItems[i].Value, bindItems[i].Value);
-            }
+
+            manyItems.ForEach((item,index) => Assert.Equal(item, bindItems[index]));
+
         }
 
         [Fact]
-        public void Should_Return_An_IEnumerable()
+        public void ShouldReturnAnIEnumerable()
         {
             var empty = Return<string>();
             var list = Return("A", "B");

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Data;
 using System.Linq;
 
 using Unit = System.ValueTuple;
@@ -18,8 +19,19 @@ namespace Funx.Extensions
         public static IEnumerable<T> Return<T>(params T[] items)
             => items.ToImmutableList();
 
-        public static IEnumerable<Unit> ForEach<T>
+        public static void ForEach<T>
             (this IEnumerable<T> ts, Action<T> action)
             => ts.Map(action.ToFunc()).ToImmutableList();
+        
+        public static void ForEach<T>
+            (this IEnumerable<T> ts, Action<T,long> action)
+        {
+            var arr = ts as T[] ?? ts.ToArray();
+            for (var i = 0; i < arr.LongLength; i++)
+            {
+                var t = arr[i];
+                action(t, i);
+            }
+        }
     }
 }
