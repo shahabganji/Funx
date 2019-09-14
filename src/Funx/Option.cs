@@ -7,6 +7,7 @@ using static Funx.Helpers.OptionHelpers;
 
 namespace Funx {
     public struct Option<T> : IEquatable<None>, IEquatable<Option<T>> {
+
         private readonly bool _isSome;
         private readonly T _value;
 
