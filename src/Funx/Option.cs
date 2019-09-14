@@ -46,30 +46,33 @@ namespace Funx {
         public bool Equals(None other) => IsNone;
         public bool Equals(Option<T> other)
             => _isSome == other._isSome && (IsNone || this._value.Equals(other._value));
+        public override bool Equals(object obj)
+        {
+            return obj is Option<T> other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_isSome.GetHashCode() * 397) ^ EqualityComparer<T>.Default.GetHashCode(_value);
+            }
+        }
 
         public static bool operator ==(Option<T> @this, Option<T> other)
             => @this.Equals(other);
         public static bool operator !=(Option<T> @this, Option<T> other)
             => !(@this == other);
-        
-//        public static bool operator ==(Option<T> @this, T other)
-//            => @this.Equals(other);
-//        public static bool operator !=(Option<T> @this, T other)
-//            => !(@this == other);
-//        
-//        public static bool operator ==(T other,Option<T> @this)
-//            => @this.Equals(other);
-//        public static bool operator !=(T other,Option<T> @this)
-//            => !(@this == other);
 
-//        public override bool Equals(object obj)
-//        {
-//            if (IsNone && obj == null) return true;
-//
-//            var other = Some(obj);
-//
-//            return this.Equals(other);
-//        }
+        public static bool operator ==(Option<T> @this, T other)
+            => @this.Equals(other);
+        public static bool operator !=(Option<T> @this, T other)
+            => !(@this == other);
+
+        public static bool operator ==(T other, Option<T> @this)
+            => @this.Equals(other);
+        public static bool operator !=(T other, Option<T> @this)
+            => !(@this == other);
 
         public override string ToString()
             => this._isSome ? $"Some({_value})" : "None";
