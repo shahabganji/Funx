@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Funx.Option;
 using static Funx.Helpers;
 
+using Unit = System.ValueTuple;
+
+
 namespace Funx
 {
     public struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
@@ -31,24 +34,37 @@ namespace Funx
 
         public static implicit operator Option<T>(T value)
         {
-            return value == null ? (Option<T>) Helpers.None : Some(value);
+            return value == null ? Helpers.None : Some(value);
         }
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
+            => _isSome ? some(_value) : none();
+        
+        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, Task<TR>> someAsync)
+            => _isSome ? someAsync(_value) : noneAsync();
+
+        public Task<TR> MatchAsync<TR>(Func<TR> none, Func<T, Task<TR>> someAsync)
         {
-            return _isSome ? some(_value) : none();
+            Task<TR> NoneAsync() => Task.FromResult(none());
+
+            return this.MatchAsync(NoneAsync, someAsync);
         }
 
-        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, Task<TR>> someAsync)
+        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T,TR> some)
         {
-            return _isSome ? someAsync(_value) : noneAsync();
+            Task<TR> SomeAsync(T t) => Task.FromResult(some(t));
+
+            return this.MatchAsync(noneAsync, SomeAsync);
         }
+
 
         public IEnumerable<T> AsEnumerable()
         {
             if (this._isSome)
                 yield return this._value;
         }
+
+        #region Equality methds:
 
         public bool Equals(None other) => IsNone;
 
@@ -68,6 +84,11 @@ namespace Funx
             }
         }
 
+        #endregion
+
+        // TODO: Add unit tests for operators
+        #region Operators:
+
         public static bool operator ==(Option<T> @this, Option<T> other)
             => @this.Equals(other);
 
@@ -85,6 +106,8 @@ namespace Funx
 
         public static bool operator !=(T other, Option<T> @this)
             => !(@this == other);
+
+        #endregion
 
         public override string ToString()
             => this._isSome ? $"Some({_value})" : "None";
