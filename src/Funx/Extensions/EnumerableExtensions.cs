@@ -33,5 +33,12 @@ namespace Funx.Extensions
                 action(t, i);
             }
         }
+
+        public static bool SafeAny<T>(this IEnumerable<T> @this)
+            => @this != null && @this.Any();
+        
+        public static bool SafeAny<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
+            => @this != null && @this.Any(predicate);
+
     }
 }

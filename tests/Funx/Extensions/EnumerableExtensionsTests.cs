@@ -23,7 +23,7 @@ namespace Funx.Tests.Extensions
 
             Assert.Equal(selectResults.Count(), mapResult.Count());
 
-            selectResults.ForEach((item,index) => Assert.Equal(item, mapResult[index]));
+            selectResults.ForEach((item, index) => Assert.Equal(item, mapResult[index]));
         }
 
         [Fact]
@@ -31,9 +31,9 @@ namespace Funx.Tests.Extensions
         {
             IEnumerable<Subject> population = new List<Subject>()
             {
-                new Subject(){Age = Age.Of(20)},
-                new Subject(){},
-                new Subject(){Age = Age.Of(30)}
+                new Subject() {Age = Age.Of(20)},
+                new Subject() { },
+                new Subject() {Age = Age.Of(30)}
             };
 
             var manyItems = population.SelectMany(p => p.Age.AsEnumerable()).ToArray();
@@ -41,8 +41,7 @@ namespace Funx.Tests.Extensions
 
             Assert.Equal(manyItems.Count(), bindItems.Count());
 
-            manyItems.ForEach((item,index) => Assert.Equal(item, bindItems[index]));
-
+            manyItems.ForEach((item, index) => Assert.Equal(item, bindItems[index]));
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace Funx.Tests.Extensions
 
             Assert.NotNull(empty);
             Assert.IsAssignableFrom<IEnumerable<string>>(empty);
-            Assert.Equal(0 , emptyCount);
+            Assert.Equal(0, emptyCount);
 
             Assert.NotNull(list);
             Assert.IsAssignableFrom<IEnumerable<string>>(list);
@@ -67,7 +66,7 @@ namespace Funx.Tests.Extensions
         public void ShouldReturnAnEmptyList()
         {
             var actual = Return<string>();
-            
+
             Assert.NotNull(actual);
             Assert.Empty(actual);
         }
@@ -76,16 +75,65 @@ namespace Funx.Tests.Extensions
         public void ShouldReturnAListOfString()
         {
             var actual = Return("first", "second");
-            
+
             Assert.NotNull(actual);
-            
+
             var collection = actual.ToList();
             Assert.NotEmpty(collection);
 
             var listCount = collection.Count();
-            
+
             Assert.Equal(2, listCount);
         }
 
+        [Fact]
+        public void ShouldSafeAnyReturnFalseOnNull()
+        {
+            IEnumerable<int> integers = null;
+
+            var hasAnyElement = integers.SafeAny();
+
+            Assert.False(hasAnyElement);
+        }
+        
+        [Fact]
+        public void ShouldSafeAnyReturnFalseOnEmpty()
+        {
+            IEnumerable<int> integers = new List<int>();
+
+            var hasAnyElement = integers.SafeAny();
+
+            Assert.False(hasAnyElement);
+        }
+        
+        [Fact]
+        public void ShouldSafeAnyReturnTrueWhenHavingElement()
+        {
+            IEnumerable<int> integers = new []{1,2,3};
+
+            var hasAnyElement = integers.SafeAny();
+
+            Assert.True(hasAnyElement);
+        }
+
+        [Fact]
+        public void ShouldSafeAnyReturnFalseOnFailingPredicate()
+        {
+            IEnumerable<int> integers = new[] {1, 2, 3, 4};
+
+            var hasAnyElement = integers.SafeAny(x => x > 5);
+
+            Assert.False(hasAnyElement);
+        }
+
+        [Fact]
+        public void ShouldSafeAnyReturnTrueOnPassingPredicate()
+        {
+            IEnumerable<int> integers = new[] {1, 2, 3, 4};
+
+            var hasAnyElement = integers.SafeAny(x => x % 2 == 0);
+
+            Assert.True(hasAnyElement);
+        }
     }
 }
