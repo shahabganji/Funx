@@ -23,7 +23,7 @@ namespace Funx.Extensions
                 try
                 {
                     var result = await option.MatchAsync(
-                        () => Task.FromResult<Option<TR>>(None),
+                        () => None,
                         async t =>
                         {
                             var mapped = await funcAsync(t).ConfigureAwait(false);
@@ -56,7 +56,20 @@ namespace Funx.Extensions
         public static Option<TR> Bind<T, TR>(this Option<T> option, Func<T, Option<TR>> func)
             => option.Match(() => None, func);
 
+        public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> @this, Func<T, Task<Option<TR>>> funcAsync)
+            => @this.MatchAsync(() => None,funcAsync);
+
         public static Option<TR> Bind<T, TR>(this Option<T> option, Func<T, TR> func)
             => option.Match(() => None, x => Some(func(x)));
+
+        public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> option, Func<T, Task<TR>> funcAsync)
+        {
+            async Task<Option<TR>> AdapterFuncAsync(T t)
+            {
+                return Some(await funcAsync(t).ConfigureAwait(false));
+            }
+
+            return option.BindAsync(AdapterFuncAsync);
+        }
     }
 }
