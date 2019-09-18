@@ -45,16 +45,16 @@ namespace Funx
 
         public Task<TR> MatchAsync<TR>(Func<TR> none, Func<T, Task<TR>> someAsync)
         {
-            Task<TR> NoneAsync() => Task.FromResult(none());
+            Task<TR> AdapterNoneAsync() => Task.FromResult(none());
 
-            return this.MatchAsync(NoneAsync, someAsync);
+            return this.MatchAsync(AdapterNoneAsync, someAsync);
         }
 
         public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T,TR> some)
         {
-            Task<TR> SomeAsync(T t) => Task.FromResult(some(t));
+            Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
 
-            return this.MatchAsync(noneAsync, SomeAsync);
+            return this.MatchAsync(noneAsync, AdapterSomeAsync);
         }
 
 
