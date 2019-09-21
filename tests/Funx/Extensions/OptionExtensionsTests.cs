@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Funx.Extensions;
 using Xunit;
@@ -87,6 +89,18 @@ namespace Funx.Tests.Extensions
             await Assert.ThrowsAsync<InvalidOperationException>(() => lower.MapAsync(ToUpperAsync)).ConfigureAwait(false);
         }
 
+        [Fact]
+        public void Bind_Should_Bind_Between_IEnumerable_Of_Option()
+        {
+            var name = Some(new[]{"John" , "Jane"});
+            
+            IEnumerable<char> ToCharacters(string[] names) => names.SelectMany(n => n.ToCharArray());
+
+            var result = name.Bind(ToCharacters);
+
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<IEnumerable<char>>(result);
+        }
 
     }
 }
