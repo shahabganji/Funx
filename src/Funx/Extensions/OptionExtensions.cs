@@ -57,7 +57,7 @@ namespace Funx.Extensions
             => option.Match(() => None, func);
 
         public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> @this, Func<T, Task<Option<TR>>> funcAsync)
-            => @this.MatchAsync(() => None,funcAsync);
+            => @this.MatchAsync(() => None, funcAsync);
 
         public static Option<TR> Bind<T, TR>(this Option<T> option, Func<T, TR> func)
             => option.Match(() => None, x => Some(func(x)));
