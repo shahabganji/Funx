@@ -102,5 +102,19 @@ namespace Funx.Tests.Extensions
             Assert.IsAssignableFrom<IEnumerable<char>>(result);
         }
 
+        [Fact]
+        public void Bind_ShouldReturnTheValueOfTheProvidedFunctionWithNoWrapper()
+        {
+            var lower = Some("test");
+
+            Option<string> ToUpper(string value) => value.ToUpper();
+
+            var upper = lower.Bind(ToUpper);
+
+            Assert.IsAssignableFrom<Option<string>>(upper);
+
+            upper.ForEach((value) => { Assert.Equal(value, $"TEST"); });
+        }
+
     }
 }

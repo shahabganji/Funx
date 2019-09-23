@@ -86,7 +86,6 @@ namespace Funx
 
         #endregion
 
-        // TODO: Add unit tests for operators
         #region Operators:
 
         public static bool operator ==(Option<T> @this, Option<T> other)
