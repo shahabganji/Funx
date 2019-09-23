@@ -14,6 +14,9 @@ namespace Funx.Extensions
                 value => Some(func(value))
             );
 
+        public static Option<TR> Bind<T, TR>(this Option<T> option, Func<T, Option<TR>> func)
+            => option.Match(() => None, func);
+
         public static Task<Option<TR>> MapAsync<T, TR>(this Option<T> option, Func<T, Task<TR>> funcAsync)
         {
             var tcs = new TaskCompletionSource<Option<TR>>();
@@ -41,33 +44,31 @@ namespace Funx.Extensions
             return tcs.Task;
         }
 
-        public static IEnumerable<TR> Bind<T, TR>(this IEnumerable<T> list, Func<T, Option<TR>> func)
-            => list.Bind(x => func(x).AsEnumerable());
-
-        public static IEnumerable<TR> Bind<T, TR>(this Option<T> option, Func<T, IEnumerable<TR>> func)
-            => option.AsEnumerable().Bind(func);
-
-        public static Option<TR> Bind<T, TR>(this Option<T> option, Func<T, Option<TR>> func)
-            => option.Match(() => None, func);
-
         public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> @this, Func<T, Task<Option<TR>>> funcAsync)
             => @this.MatchAsync(() => None, funcAsync);
         
-        public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> option, Func<T, Task<TR>> funcAsync)
-        {
-            async Task<Option<TR>> AdapterFuncAsync(T t)
-            {
-                return Some(await funcAsync(t).ConfigureAwait(false));
-            }
-
-            return option.BindAsync(AdapterFuncAsync);
-        }
+        // this is exactly MapAsync
+//        public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> option, Func<T, Task<TR>> funcAsync)
+//        {
+//            async Task<Option<TR>> AdapterFuncAsync(T t)
+//            {
+//                return Some(await funcAsync(t).ConfigureAwait(false));
+//            }
+//
+//            return option.BindAsync(AdapterFuncAsync);
+//        }
 
         public static Option<T> Where<T>(this Option<T> @this, Func<T, bool> predicate)
             => @this.Match(() => None, t => predicate(t) ? Some(t) : None);
 
         public static Option<Unit> ForEach<T>(this Option<T> @this, Action<T> action)
             => @this.Map(action.ToFunc());
+
+        public static IEnumerable<TR> Bind<T, TR>(this IEnumerable<T> list, Func<T, Option<TR>> func)
+            => list.Bind(x => func(x).AsEnumerable());
+
+        public static IEnumerable<TR> Bind<T, TR>(this Option<T> option, Func<T, IEnumerable<TR>> func)
+            => option.AsEnumerable().Bind(func);
 
     }
 }

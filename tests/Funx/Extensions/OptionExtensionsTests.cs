@@ -116,5 +116,55 @@ namespace Funx.Tests.Extensions
             upper.ForEach((value) => { Assert.Equal(value, $"TEST"); });
         }
 
+        [Fact]
+        public void Bind_ShouldReturnNoneWhenTheMainOptionIsNoneAndNotCallSomeFunc()
+        {
+            Option<string> lower = None;
+
+            Option<bool> ToUpper(string value) => false;
+
+            var upper = lower.Bind(ToUpper);
+
+            Assert.IsAssignableFrom<Option<bool>>(upper);
+            Assert.True(upper == None);
+            
+        }
+
+        [Fact]
+        public async Task BindAsync_ShouldReturnTheValueOfTheProvidedFunctionWithNoWrapper()
+        {
+            var lower = Some("test");
+
+            Task<Option<string>> ToUpperAsync(string value) => Task.FromResult(Some(value.ToUpper()));
+
+            var upperTask = lower.BindAsync(ToUpperAsync);
+
+            await Assert.IsAssignableFrom<Task<Option<string>>>(upperTask).ConfigureAwait(false);
+
+            var upper = await upperTask.ConfigureAwait(false);;
+
+            Assert.IsAssignableFrom<Option<string>>(upper);
+
+            upper.ForEach((value) => { Assert.Equal(value, $"TEST"); });
+        }
+
+        [Fact]
+        public async Task BindAsyncShouldReturnNoneWhenTheMainOptionIsNoneAndNotCallSomeFunc()
+        {
+            Option<string> lower = None;
+
+            Task<Option<bool>> ToUpperAsync(string value) => Task.FromResult(Some(false));
+
+            var upperTask = lower.BindAsync(ToUpperAsync);
+
+            await Assert.IsAssignableFrom<Task<Option<bool>>>(upperTask).ConfigureAwait(false);
+
+            var upper = await upperTask.ConfigureAwait(false);
+
+            Assert.IsAssignableFrom<Option<bool>>(upper);
+            Assert.True(upper == None);
+            
+        }
+
     }
 }
