@@ -135,5 +135,19 @@ namespace Funx.Tests.Extensions
 
             Assert.True(hasAnyElement);
         }
+
+        [Fact]
+        public void ForEach_ShouldRunForAllElements()
+        {
+            var numbers = new[] {1, 3, 5};
+
+            var numbersList = new List<int>();
+
+            numbers.ForEach( n => numbersList.Add(n) );
+
+            numbersList.ForEach((value, index) => { Assert.Equal(value, numbers[index]); });
+
+        }
+
     }
 }
