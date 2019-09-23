@@ -324,5 +324,31 @@ namespace Funx.Tests
             Assert.Equal(none.ToString() , $"Some(1)");
         }
 
+        [Fact]
+        public void Equals_ShouldBeTrueWhenNoneIsPassedAndOptionIsAlsoNone()
+        {
+            var none = new None();
+
+            Option<int> optStr = Helpers.None;
+
+            var isEqual = optStr.Equals(none);
+
+            Assert.True(isEqual);
+
+        }
+
+        [Fact]
+        public void Equals_ShouldBeFalseWhenNoneIsPassedAndOptionsIsNotNone()
+        {
+            var none = new None();
+
+            Option<int> optStr = Some(1);
+
+            var isEqual = optStr.Equals(none);
+
+            Assert.False(isEqual);
+
+        }
+
     }
 }
