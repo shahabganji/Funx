@@ -14,6 +14,12 @@ namespace Funx.Extensions
                 value => Some(func(value))
             );
 
+        public static Option<TR> Select<T, TR>(this Option<T> option, Func<T, TR> func) =>
+            option.Map(func);
+
+        public static Option<TR> SelectMany<T, TR>(this Option<T> option, Func<T, Option<TR>> func) =>
+            option.Bind(func);
+
         public static Option<TR> Bind<T, TR>(this Option<T> option, Func<T, Option<TR>> func)
             => option.Match(() => None, func);
 
