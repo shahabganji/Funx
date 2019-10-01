@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using Funx.Extensions;
 using Funx.Option;
 using Xunit;
 using static Funx.Helpers;
@@ -348,6 +349,29 @@ namespace Funx.Tests
 
             Assert.False(isEqual);
 
+        }
+
+
+        [Fact]
+        public void Select_should_map_an_option_to_another_option()
+        {
+            var someStr = Some("value");
+
+            var result = from s in someStr select s.ToUpper();
+
+            Assert.False(result == Funx.Helpers.None);
+            Assert.Equal("VALUE", result);
+
+        }
+
+        [Fact]
+        public void Select_should_map_an_option_to_None_when_option_is_none()
+        {
+            Option<string> none = Helpers.None;
+
+            var result = from s in none select s.ToUpper();
+
+            Assert.True(result == Funx.Helpers.None);
         }
 
     }

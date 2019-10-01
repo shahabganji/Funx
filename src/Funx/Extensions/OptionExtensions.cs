@@ -17,9 +17,6 @@ namespace Funx.Extensions
         public static Option<TR> Select<T, TR>(this Option<T> option, Func<T, TR> func) =>
             option.Map(func);
 
-        public static Option<TR> SelectMany<T, TR>(this Option<T> option, Func<T, Option<TR>> func) =>
-            option.Bind(func);
-
         public static Option<TR> Bind<T, TR>(this Option<T> option, Func<T, Option<TR>> func)
             => option.Match(() => None, func);
 
@@ -53,17 +50,6 @@ namespace Funx.Extensions
         public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> @this, Func<T, Task<Option<TR>>> funcAsync)
             => @this.MatchAsync(() => None, funcAsync);
         
-        // this is exactly MapAsync
-//        public static Task<Option<TR>> BindAsync<T, TR>(this Option<T> option, Func<T, Task<TR>> funcAsync)
-//        {
-//            async Task<Option<TR>> AdapterFuncAsync(T t)
-//            {
-//                return Some(await funcAsync(t).ConfigureAwait(false));
-//            }
-//
-//            return option.BindAsync(AdapterFuncAsync);
-//        }
-
         public static Option<T> Where<T>(this Option<T> @this, Func<T, bool> predicate)
             => @this.Match(() => None, t => predicate(t) ? Some(t) : None);
 
