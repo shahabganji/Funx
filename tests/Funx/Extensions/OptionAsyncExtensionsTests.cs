@@ -128,5 +128,44 @@ namespace Funx.Tests.Extensions
             Assert.Equal( None, result);
         }
         
+
+        [Fact]
+        public async Task Where_should_apply_a_true_predicate_and_return_value_when_there_is_an_option()
+        {
+            var resultTask =
+                from s in _taskOptionWithValue
+                where  s.StartsWith("v")
+                select Task.FromResult(s.ToUpper());
+
+            var result = await resultTask.ConfigureAwait(false);
+
+            Assert.NotEqual(result , None);
+            Assert.Equal($"VALUE", result);
+
+        }
+        [Fact]
+        public async Task Where_should_apply_a_false_predicate_and_return_None_when_there_is_an_option()
+        {
+            var resultTask =
+                from s in _taskOptionWithValue
+                where  s.StartsWith("zzz")
+                select Task.FromResult(s.ToUpper());
+
+            var result = await resultTask.ConfigureAwait(false);
+
+            Assert.Equal(result , None);
+        }
+        [Fact]
+        public async Task Where_should_return_none_when_there_is_None()
+        {
+            var resultTask =
+                from s in _taskOptionWithNone
+                where s.StartsWith("v")
+                select Task.FromResult(s.ToUpper());
+
+            var result = await resultTask.ConfigureAwait(false);
+
+            Assert.Equal( None, result);
+        }
     }
 }
