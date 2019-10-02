@@ -44,7 +44,7 @@ namespace Funx.Tests
                 return Task.FromResult(false);
             }
 
-            var noneCalled = await noneOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync);
+            var noneCalled = await noneOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync).ConfigureAwait(false);
 
             Assert.True(noneCalled);
         }
