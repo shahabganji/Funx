@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Funx.Option;
-using static Funx.Helpers;
 
 using Unit = System.ValueTuple;
 
@@ -11,6 +10,9 @@ namespace Funx
 {
     public struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
     {
+        public static Option<T> None => Funx.Option.None.Default;
+        public static Option<T> Some(T value) => new Some<T>(value);
+        
         private readonly bool _isSome;
         private readonly T _value;
 
@@ -39,7 +41,7 @@ namespace Funx
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
             => _isSome ? some(_value) : none();
-        
+
         public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, Task<TR>> someAsync)
             => _isSome ? someAsync(_value) : noneAsync();
 
@@ -64,7 +66,7 @@ namespace Funx
                 yield return this._value;
         }
 
-        #region Equality methds:
+        #region Equality methods:
 
         public bool Equals(None other) => IsNone;
 
