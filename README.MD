@@ -43,7 +43,7 @@ I would rather to use it in a different way, since all native types can be impli
 using Funx;
 using static Funx.Helpers;
 
-Option<string> none = None; // or Option<string> none = None;
+Option<string> none = None;
 Option<string> author = "Enrico";
 
 var value = author.Match(() => "No Name", v => v);
