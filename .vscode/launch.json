@@ -10,10 +10,10 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/tests/Nyx/bin/Debug/netcoreapp3.0/Nyx.Tests.dll",
+            "program": "${workspaceFolder}/tests/Funx/bin/Debug/netcoreapp2.2/Funx.Tests.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/tests/Nyx",
-            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "cwd": "${workspaceFolder}/tests/Funx",
+            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
         },

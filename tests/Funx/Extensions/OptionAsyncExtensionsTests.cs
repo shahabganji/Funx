@@ -31,24 +31,26 @@ namespace Funx.Tests.Extensions
         {
             var result = await _taskOptionWithValue.MatchAsync(NoneFunc, SomeFunc).ConfigureAwait(false);
 
-            Assert.Equal($"VALUE", result );
+            Assert.Equal($"VALUE", result);
 
         }
+
         [Fact]
         public async Task MatchAsync_should_call_provided_None_function_when_not_matched()
         {
             var result = await _taskOptionWithNone.MatchAsync(NoneFunc, SomeFunc).ConfigureAwait(false);
 
-            Assert.Equal($"None", result );
+            Assert.Equal($"None", result);
         }
-        
+
         [Fact]
         public async Task MatchAsync_should_call_provided_Some_when_matched_overload_noneAsync()
         {
             var result = await _taskOptionWithValue.MatchAsync(NoneFuncAsync, SomeFunc).ConfigureAwait(false);
-            
+
             Assert.Equal("VALUE", result);
         }
+
         [Fact]
         public async Task MatchAsync_should_call_provided_NoneAsync_when_matched_overload_noneAsync()
         {
@@ -61,9 +63,10 @@ namespace Funx.Tests.Extensions
         public async Task MatchAsync_should_call_provided_SomeAsync_when_matched_overload_someAsync()
         {
             var result = await _taskOptionWithValue.MatchAsync(NoneFunc, SomeFuncAsync).ConfigureAwait(false);
-            
+
             Assert.Equal("VALUE", result);
         }
+
         [Fact]
         public async Task MatchAsync_should_call_provided_None_when_matched_overload_someAsync()
         {
@@ -71,14 +74,15 @@ namespace Funx.Tests.Extensions
 
             Assert.Equal("None", result);
         }
-        
+
         [Fact]
         public async Task MatchAsync_should_call_provided_SomeAsync_when_matched_overload_someAsync_noneAsync()
         {
             var result = await _taskOptionWithValue.MatchAsync(NoneFuncAsync, SomeFuncAsync).ConfigureAwait(false);
-            
+
             Assert.Equal("VALUE", result);
         }
+
         [Fact]
         public async Task MatchAsync_should_call_provided_NoneAsync_when_matched_overload_someAsync_noneAsync()
         {
@@ -87,6 +91,30 @@ namespace Funx.Tests.Extensions
             Assert.Equal("None", result);
         }
 
+        [Fact]
+        public async Task BindAsync_should_stay_in_the_same_abstraction()
+        {
+            Task<Option<string>> ToUpper(string s) => Task.FromResult(Some(s.ToUpper()));
+
+            var strOption = Task.FromResult(Some("value"));
+
+            var result = await strOption.BindAsync(ToUpper).ConfigureAwait(false);
+
+            Assert.NotEqual(result, None);
+            result.ForEach(x => Assert.Equal(x, $"VALUE") );
+        }
+        [Fact]
+        public async Task BindAsync_should_return_None_when_Not_matched()
+        {
+            Task<Option<string>> ToUpper(string s) => Task.FromResult(Some(s.ToUpper()));
+
+            var strOption = Task.FromResult<Option<string>>(None);
+
+            var result = await strOption.BindAsync(ToUpper).ConfigureAwait(false);
+
+            Assert.Equal(result, None);
+        }
+        
         [Fact]
         public async Task MapAsync_should_map_Option_of_T_to_Option_of_TR_when_matched()
         {
