@@ -71,5 +71,43 @@ var isTeenager = from s in student
                  select s;
 ```
 
+If you want to induce side effects use `ForEach` method, the provided function will be called if a value exists:
+
+```csharp
+Option<int> option = 11;
+
+option.ForEach(WriteLine);
+```
+
+To map Option<T> to another option use `Map`, and `Bind` functions, the `Map` accepts a function which returns `TR`, and `Bind` accepts a function which returns `Option<TR>`, if we pass the latter function to `Map` will end up with nested Options, like `<Option<Option<TR>>>`, which might not be what we expect:
 
 
+```csharp
+using Funx.Extensions;
+using static Funx.Helpers;
+
+var str = Some("value");
+
+string ToUpper(string v) => v.ToUpper();
+
+var upperCase = str.Map(ToUpper); // upperCase is an Option<string> too.
+
+```
+
+```csharp
+using Funx;
+using Funx.Extensions;
+using static Funx.Helpers;
+
+var str = Some("value");
+
+Option<string> ToUpper(string v)
+{
+    if (v.StartsWith("v"))
+        return v; // all types can implicitly cast to Option<T>, so simply return them.
+
+    return None;
+}
+
+var upperCase = str.Bind(ToUpper); // here upperCase is Option<string>, but if we've used Map function it would be Option<Option<string>>
+```
