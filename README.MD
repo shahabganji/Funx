@@ -101,7 +101,9 @@ using static Funx.Helpers;
 
 var str = Some("value");
 
-Option<string> ToUpper(string v)
+string ToUpper(string v) => v.ToUpper();
+
+Option<string> IsValid(string v)
 {
     if (v.StartsWith("v"))
         return v; // all types can implicitly cast to Option<T>, so simply return them.
@@ -109,5 +111,8 @@ Option<string> ToUpper(string v)
     return None;
 }
 
-var upperCase = str.Bind(ToUpper); // here upperCase is Option<string>, but if we've used Map function it would be Option<Option<string>>
+var upperCase = str.Bind(IsValid).Map(ToUpper); // here upperCase is Option<string>, but if we've used Map function it would be Option<Option<string>>
+
+upperCase.ForEach(WriteLine);
+
 ```
