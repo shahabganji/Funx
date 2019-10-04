@@ -12,6 +12,12 @@ Funx provides robust and well-tested core basic structs for functional programmi
 
 Easily install it via [Nuget](https://www.nuget.org/packages/Funx/).
 
+```
+Install-Package Funx
+
+dotnet add package Funx
+```
+
 
 ### Usage
 
@@ -19,7 +25,7 @@ Easily install it via [Nuget](https://www.nuget.org/packages/Funx/).
 
 ```csharp
 using Funx;
-// using Funx.Helpers; // in some scenarios it may provide better syntax && readability
+// using static Funx.Helpers; // in some scenarios it may provide better syntax && readability
 
 var none = Option<string>.None; // or Option<string> none = None;
 var author = Option<string>.Some("Enrico");
@@ -35,7 +41,7 @@ I would rather to use it in a different way, since all native types can be impli
 
 ```csharp
 using Funx;
-using Funx.Helpers;
+using static Funx.Helpers;
 
 Option<string> none = None; // or Option<string> none = None;
 Option<string> author = "Enrico";
