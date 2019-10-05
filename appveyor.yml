@@ -29,13 +29,13 @@ before_build:
   - choco install opencover.portable
   - choco install codecov
 
-build_script:
-  - ps: dotnet build src/Funx/Funx.csproj --verbosity m
-  - ps: dotnet build tests/Funx/Funx.Tests.csproj --verbosity m
+build:
+  project: Funx.sln
+  verbosity: minimal
 
 test_script:
   - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\tests\Funx\bin\Debug\Funx.Tests.dll -noshadow" -filter:"+[Funx*]* -[Funx.Tests*]*" -output:".\Funx_coverage.xml"
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\tests\Funx\bin\Debug\netcoreapp2.2\Funx.Tests.dll -noshadow" -filter:"+[Funx*]* -[Funx.Tests*]*" -output:".\funx_coverage.xml"
   - codecov -f "Funx_coverage.xml"
 
 for:
