@@ -1,4 +1,4 @@
-name: ASP.NET Core CI
+name: Funx CI
 
 on: 
   push:
@@ -24,7 +24,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: steps
     
     steps:
     - uses: actions/checkout@v1
