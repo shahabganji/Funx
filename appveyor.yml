@@ -35,7 +35,7 @@ build:
 
 test_script:
   - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\tests\Funx\bin\Debug\netcoreapp2.2\Funx.Tests.dll -noshadow" -filter:"+[Funx*]* -[Funx.Tests*]*" -output:".\funx_coverage.xml"
+  - OpenCover.Console.exe -register:user -target:"xunit.console.x86.exe" -targetargs:".\tests\Funx\bin\Debug\netcoreapp2.2\Funx.Tests.dll -noshadow" -filter:"+[Funx*]* -[Funx.Tests*]*" -output:".\funx_coverage.xml"
   - codecov -f "Funx_coverage.xml"
 
 for:
