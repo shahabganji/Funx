@@ -5,49 +5,57 @@ configuration: Release
 platform:
   - Any CPU
 
-branches:
-  only:
-    - /\d*\.\d*\.\d*/
+-
+  branches:
+    only:
+      - develop
+      - /\d*\.\d*\.\d*/
 
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: $(APPVEYOR_REPO_TAG_NAME)
-  package_version: $(APPVEYOR_REPO_TAG_NAME)
-  assembly_version: $(APPVEYOR_REPO_TAG_NAME)
-  file_version: $(APPVEYOR_REPO_TAG_NAME)
-  informational_version: $(APPVEYOR_REPO_TAG_NAME)
+  dotnet_csproj:
+    patch: true
+    file: '**\*.csproj'
+    version: $(APPVEYOR_REPO_TAG_NAME)
+    package_version: $(APPVEYOR_REPO_TAG_NAME)
+    assembly_version: $(APPVEYOR_REPO_TAG_NAME)
+    file_version: $(APPVEYOR_REPO_TAG_NAME)
+    informational_version: $(APPVEYOR_REPO_TAG_NAME)
 
+  init:
+    - ps: git config --global core.autocrlf input
+    - ps: dotnet nuget locals http-cache -c
 
-init:
-  - ps: git config --global core.autocrlf input
-  - ps: dotnet nuget locals http-cache -c
+  before_build:
+    - ps: ls
+    - ps: dotnet restore
+    - choco install opencover.portable
+    - choco install codecov
 
-before_build:
-  - ps: ls
-  - ps: dotnet restore
+  build_script:
+    - ps: dotnet build src/Funx/Funx.csproj --verbosity m
 
-build_script:
-  - ps: dotnet build src/Funx/Funx.csproj --verbosity m
+  test_script:
+    - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
+    - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\tests\Funx\bin\Debug\Funx.Tests.dll -noshadow" -filter:"+[Funx*]* -[Funx.Tests*]*" -output:".\Funx_coverage.xml"
+    - codecov -f "Funx_coverage.xml"
 
-test_script:
-  - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
+  after_test:
+    - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ../../publish
+    - ps: ls publish
+  #  - appveyor PushArtifact publish/Funx.1.0.0.nupkg
 
-after_test:
-  - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ../../publish
-  - ps: ls publish
-#  - appveyor PushArtifact publish/Funx.1.0.0.nupkg
+  artifacts:
+    - path: '**\*.nupkg'
 
-artifacts:
-  - path: '**\*.nupkg'
+for:
 
-deploy:
-  provider: NuGet
-  api_key:
-    secure: 1mdi2SiGn3xkp9/LhAaeBi032LeQ2fOuKFNm06P++VhPTcHbbv+AsA73iraxGT2S
-  skip_symbols: false
-  artifact: /.*\.nupkg/
+-
+  branches:
+    only:
+      - /\d*\.\d*\.\d*/
 
-
-on_success:
-  - ps: Write-Host "All Done" -ForegroundColor DarkGreen -BackgroundColor White
+  deploy:
+    provider: NuGet
+    api_key:
+      secure: 1mdi2SiGn3xkp9/LhAaeBi032LeQ2fOuKFNm06P++VhPTcHbbv+AsA73iraxGT2S
+    skip_symbols: false
+    artifact: /.*\.nupkg/
