@@ -19,7 +19,7 @@ jobs:
         with:
           dotnet-version: 2.2.108
       - name: Test the library
-        run: dotnet test
+        run: dotnet test  tests/Funx/Funx.Tests.csproj
     
   build:
 
