@@ -1,6 +1,11 @@
 
 ## Funx
 
+[![Build status](https://ci.appveyor.com/api/projects/status/qk1e8ph62hektvg4?svg=true)](https://ci.appveyor.com/project/shahabganji/funx)
+
+[![codecov](https://codecov.io/gh/shahabganji/Funx/branch/master/graph/badge.svg)](https://codecov.io/gh/shahabganji/Funx)
+
+
 This is an experimental functional library for C# developers, all the features are implemented based on what [Enrico](https://github.com/la-yumba) taught in his [Functional Programming in C#](https://www.amazon.com/Functional-Programming-write-better-code/dp/1617293954). I tried to learn them and write one for myself.
 
 
