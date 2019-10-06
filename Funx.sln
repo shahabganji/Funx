@@ -1,20 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9BBB6D8C-8F89-4690-A166-ABDC45C30B72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funx", "src\Funx\Funx.csproj", "{BFC22501-759F-4EC9-A797-BF17FB4C43B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funx", "src\Funx\Funx.csproj", "{BFC22501-759F-4EC9-A797-BF17FB4C43B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EB96C56F-4F8E-4334-ABA3-25BE22013BA4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{AA0B4541-7663-415E-A531-523C26040B5E}"
 	ProjectSection(SolutionItems) = preProject
+		.codecov.yml = .codecov.yml
 		appveyor.yml = appveyor.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funx.Tests", "tests\Funx\Funx.Tests.csproj", "{FD0CE2AE-943A-4CD3-92ED-84B7C28AE307}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funx.Tests", "tests\Funx\Funx.Tests.csproj", "{FD0CE2AE-943A-4CD3-92ED-84B7C28AE307}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{EC6A353A-B017-42E0-9CC5-840BADDA2D4F}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,9 +30,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BFC22501-759F-4EC9-A797-BF17FB4C43B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -54,8 +57,14 @@ Global
 		{FD0CE2AE-943A-4CD3-92ED-84B7C28AE307}.Release|x86.ActiveCfg = Release|Any CPU
 		{FD0CE2AE-943A-4CD3-92ED-84B7C28AE307}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BFC22501-759F-4EC9-A797-BF17FB4C43B8} = {9BBB6D8C-8F89-4690-A166-ABDC45C30B72}
 		{FD0CE2AE-943A-4CD3-92ED-84B7C28AE307} = {EB96C56F-4F8E-4334-ABA3-25BE22013BA4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8734107E-2593-4E49-A416-1DD99B59D64C}
 	EndGlobalSection
 EndGlobal

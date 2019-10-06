@@ -22,6 +22,7 @@ dotnet_csproj:
 init:
   - ps: git config --global core.autocrlf input
   - ps: dotnet nuget locals http-cache -c
+  - ps: dotnet tool install --global coverlet.console
 
 before_build:
   - ps: ls
@@ -35,7 +36,7 @@ build:
 
 test_script:
   - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
-  - ps: OpenCover.Console.exe -register:user -target:"xunit.console.x86.exe" -targetargs:".\tests\Funx\bin\Debug\netcoreapp2.2\Funx.Tests.dll -noshadow" -filter:"+[Funx*]* -[Funx.Tests*]*" -output:".\funx_coverage.xml"
+  - ps: coverlet .\tests\Funx\bin\Debug\netcoreapp2.2\Funx.Tests.dll --target "dotnet" --targetargs "test --no-build" --format "opencover" --output "./funx_coverage.xml"
   - codecov -f "funx_coverage.xml"
 
 for:
