@@ -70,7 +70,7 @@ namespace Funx
             internal Left(L left)
             {
                 if (left == null)
-                    throw new InvalidEnumArgumentException(nameof(left));
+                    throw new ArgumentNullException(nameof(left));
 
                 this.Value = left;
             }
@@ -88,7 +88,7 @@ namespace Funx
             internal Right(R right)
             {
                 if (right == null)
-                    throw new InvalidEnumArgumentException(nameof(right));
+                    throw new ArgumentNullException(nameof(right));
 
                 Value = right;
             }
