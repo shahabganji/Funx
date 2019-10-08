@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Funx.Extensions;
 using Funx.Option;
-
 using Unit = System.ValueTuple;
 
 
@@ -13,11 +12,11 @@ namespace Funx
     {
         public static Option<T> None => Funx.Option.None.Default;
         public static Option<T> Some(T value) => new Some<T>(value);
-        
+
         private readonly bool _isSome;
         private readonly T _value;
 
-        private bool IsNone => !_isSome;
+        public bool IsNone => !_isSome;
 
         private Option(T value)
         {
@@ -25,20 +24,11 @@ namespace Funx
             _isSome = true;
         }
 
-        public static implicit operator Option<T>(None _)
-        {
-            return new Option<T>();
-        }
-
-        public static implicit operator Option<T>(Some<T> some)
-        {
-            return new Option<T>(some.Value);
-        }
-
         public static implicit operator Option<T>(T value)
-        {
-            return value == null ? Helpers.None : Some(value);
-        }
+            => value == null ? Helpers.None : Some(value);
+        
+        public static implicit operator Option<T>(None _) => new Option<T>();
+        public static implicit operator Option<T>(Some<T> some) => new Option<T>(some.Value);
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
             => _isSome ? some(_value) : none();
@@ -50,7 +40,8 @@ namespace Funx
 
             return this.MatchAsync(AdapterNoneAsync, someAsync);
         }
-        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T,TR> some)
+
+        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, TR> some)
         {
             Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
 
