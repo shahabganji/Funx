@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Funx.Extensions;
 using Funx.Option;
 
 using Unit = System.ValueTuple;
@@ -41,23 +42,23 @@ namespace Funx
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
             => _isSome ? some(_value) : none();
-
         public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, Task<TR>> someAsync)
             => _isSome ? someAsync(_value) : noneAsync();
-
         public Task<TR> MatchAsync<TR>(Func<TR> none, Func<T, Task<TR>> someAsync)
         {
             Task<TR> AdapterNoneAsync() => Task.FromResult(none());
 
             return this.MatchAsync(AdapterNoneAsync, someAsync);
         }
-
         public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T,TR> some)
         {
             Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
 
             return this.MatchAsync(noneAsync, AdapterSomeAsync);
         }
+
+        public Unit Match<TR>(Action none, Action<T> some)
+            => this.Match(none.ToFunc(), some.ToFunc());
 
 
         public IEnumerable<T> AsEnumerable()
