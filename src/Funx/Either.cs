@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using Funx.Either;
 using Funx.Extensions;
 using Unit = System.ValueTuple;
 
@@ -31,7 +32,8 @@ namespace Funx
             _left = default;
         }
 
-        public static Either<>
+        public static Left<L> Left(L l) => new Left<L>(l); 
+        public static Right<R> Right(R r) => new Right<R>(r);
 
 
         public static implicit operator Either<L, R>(L left) => new Either<L, R>(left);
