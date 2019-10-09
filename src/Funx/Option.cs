@@ -10,8 +10,8 @@ namespace Funx
 {
     public struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
     {
-        public static Option<T> None => Funx.Option.None.Default;
-        public static Option<T> Some(T value) => new Some<T>(value);
+        public static Option<T> None => Helpers.None;
+        public static Option<T> Some(T value) => Helpers.Some(value);
 
         private readonly bool _isSome;
         private readonly T _value;
