@@ -248,6 +248,22 @@ namespace Funx.Tests
         }
 
 
+        [Fact]
+        public void IsRight_should_return_true_when_either_is_right()
+        {
+            Either<string, int> either = 1;
+
+            Assert.True(either.IsRight);
+            Assert.False(either.IsLeft);
+        }
+        [Fact]
+        public void IsLeft_should_return_true_when_either_is_left()
+        {
+            Either<string, int> either = "left";
+
+            Assert.True(either.IsLeft);
+            Assert.False(either.IsRight);
+        }
 
     }
 }
