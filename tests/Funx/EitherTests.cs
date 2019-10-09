@@ -137,5 +137,117 @@ namespace Funx.Tests
 
         }
         
+        [Fact]
+        public async Task MatchAsync_should_call_the_Right_function_if_either_is_right_right_async_overload()
+        {
+            Either<string, int> either = 1;
+
+            var rightCalled = false;
+            var leftCalled = false;
+            
+            Task<string> RightFuncAsync(int i)
+            {
+                rightCalled = true;
+                return Task.FromResult(i.ToString());
+            }
+            string LeftFunc(string s)
+            {
+                leftCalled = true;
+                return s;
+            }
+
+            var result  = await either.MatchAsync(LeftFunc, RightFuncAsync)
+                .ConfigureAwait(false);
+            
+            Assert.Equal("1" , result);
+            Assert.True(rightCalled);
+            Assert.False(leftCalled);
+
+        }
+        [Fact]
+        public async Task MatchAsync_should_call_the_Left_function_if_either_is_left_right_async_overload()
+        {
+            Either<string, int> either = "invalid";
+
+            var rightCalled = false;
+            var leftCalled = false;
+            
+            Task<string> RightFuncAsync(int i)
+            {
+                rightCalled = true;
+                return Task.FromResult(i.ToString());
+            }
+            string LeftFunc(string s)
+            {
+                leftCalled = true;
+                return s;
+            }
+
+            var result  = await either.MatchAsync(LeftFunc, RightFuncAsync)
+                .ConfigureAwait(false);
+            
+            Assert.Equal("invalid" , result);
+            Assert.False(rightCalled);
+            Assert.True(leftCalled);
+
+        }
+
+        [Fact]
+        public async Task MatchAsync_should_call_the_Right_function_if_either_is_right_left_async_overload()
+        {
+            Either<string, int> either = 1;
+
+            var rightCalled = false;
+            var leftCalled = false;
+            
+            string RightFunc(int i)
+            {
+                rightCalled = true;
+                return i.ToString();
+            }
+            Task<string> LeftFuncAsync(string s)
+            {
+                leftCalled = true;
+                return Task.FromResult(s);
+            }
+
+            var result  = await either.MatchAsync(LeftFuncAsync, RightFunc)
+                .ConfigureAwait(false);
+            
+            Assert.Equal("1" , result);
+            Assert.True(rightCalled);
+            Assert.False(leftCalled);
+
+        }
+        [Fact]
+        public async Task MatchAsync_should_call_the_Left_function_if_either_is_left_left_async_overload()
+        {
+            Either<string, int> either = "invalid";
+
+            var rightCalled = false;
+            var leftCalled = false;
+            
+            string RightFunc(int i)
+            {
+                rightCalled = true;
+                return i.ToString();
+            }
+            Task<string> LeftFuncAsync(string s)
+            {
+                leftCalled = true;
+                return Task.FromResult(s);
+            }
+
+            var result  = await either.MatchAsync(LeftFuncAsync, RightFunc)
+                .ConfigureAwait(false);
+            
+            Assert.Equal("invalid" , result);
+            Assert.False(rightCalled);
+            Assert.True(leftCalled);
+
+        }
+
+
+
     }
 }
