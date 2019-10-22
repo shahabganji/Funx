@@ -8,6 +8,9 @@ namespace Funx.Extensions
     {
         public static Either<L, RR> Map<L, R, RR>(this Either<L, R> either, Func<R, RR> f)
             => either.Match<Either<L, RR>>(l => Left(l), r => Right(f(r)));
+        
+        public static Either<LL, R> MapLeft<L, R, LL>(this Either<L, R> either, Func<L, LL> f)
+        => either.Match<Either<LL, R>>(l => Left(f(l)), r => Right(r));
 
         public static Either<L, RR> Select<L, R, RR>(this Either<L, R> either, Func<R, RR> f)
             => either.Map(f);
