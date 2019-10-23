@@ -48,8 +48,21 @@ namespace Funx
             return this.MatchAsync(noneAsync, AdapterSomeAsync);
         }
 
-        public Unit Match<TR>(Action none, Action<T> some)
+        public Unit Match(Action none, Action<T> some)
             => this.Match(none.ToFunc(), some.ToFunc());
+
+        public Unit IfNone(Action none)
+        {
+            if (this.IsNone) none();
+            return new Unit();
+        }
+        public Task IfNoneAsync(Func<Task> noneAsync) => this.IsNone ? noneAsync() : Task.CompletedTask;
+        public Unit IfSome(Action<T> some)
+        {
+            if (this._isSome) some(this._value);
+            return new Unit();
+        }
+        public Task IfSomeAsync(Func<T, Task> someAsync) => this._isSome ? someAsync(this._value) : Task.CompletedTask;
 
 
         public IEnumerable<T> AsEnumerable()

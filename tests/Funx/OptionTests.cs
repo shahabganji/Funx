@@ -374,5 +374,150 @@ namespace Funx.Tests
             Assert.True(result == Funx.Helpers.None);
         }
 
+        [Fact]
+        public void Match_should_call_some_action_passed_when_there_is_a_value()
+        {
+            var iSome = Option<int>.Some(1);
+
+            iSome.Match(() =>
+            {
+                Assert.True(false);
+            }, v =>
+            {
+                Assert.Equal(1, v);
+                Assert.True(true);
+            });
+        }
+
+        [Fact]
+        public void Match_should_call_none_action_passed_when_there_is_Nothing()
+        {
+            var none = Option<int>.None;
+
+            none.Match(() =>
+            {
+                Assert.True(true);
+            }, v =>
+            {
+                Assert.True(false);
+            });
+        }
+
+        [Fact]
+        public void IfNone_should_call_the_none_action_passed_when_there_is_Nothing()
+        {
+            var none = Option<int>.None;
+
+            var isCalled = false;
+
+            none.IfNone(() => isCalled = true);
+
+            Assert.True(isCalled);
+        }
+        [Fact]
+        public void IfNone_should_not_call_the_none_action_passed_when_there_is_a_value()
+        {
+            Option<int> iSome = 1;
+
+            var isCalled = false;
+
+            iSome.IfNone(() => isCalled = true);
+
+            Assert.False(isCalled);
+        }
+        [Fact]
+        public async Task IfNoneAsync_should_call_the_noneAsync_action_passed_when_there_is_Nothing()
+        {
+            var none = Option<int>.None;
+
+            var isCalled = false;
+
+            await none.IfNoneAsync(() =>
+            {
+                isCalled = true;
+                return Task.CompletedTask;
+            }).ConfigureAwait(false);
+
+            Assert.True(isCalled);
+        }
+        [Fact]
+        public async Task IfNoneAsync_should_not_call_the_noneAsync_action_passed_when_there_is_a_value()
+        {
+            Option<int> iSome = 1;
+
+            var isCalled = false;
+
+            await iSome.IfNoneAsync(() =>
+            {
+                isCalled = true;
+                return Task.CompletedTask;
+            }).ConfigureAwait(false);
+
+            Assert.False(isCalled);
+        }
+
+
+        [Fact]
+        public void IfSome_should_call_the_some_action_passed_when_there_is_a_value()
+        {
+            Option<int> iSome = 1;
+
+            var isCalled = false;
+
+            iSome.IfSome((v) =>
+            {
+                isCalled = true;
+                Assert.Equal(1,v);
+            }); 
+
+            Assert.True(isCalled);
+        }
+        [Fact]
+        public void IfSome_should_not_call_the_some_action_passed_when_there_is_Nothing()
+        {
+            var none = Option<int>.None;
+
+            var isCalled = false;
+
+            none.IfSome((v) =>
+            {
+                isCalled = true;
+            });
+
+            Assert.False(isCalled);
+        }
+
+        [Fact]
+        public async  Task IfSomeAsync_should_call_the_someAsync_action_passed_when_there_is_a_value()
+        {
+            Option<int> iSome = 1;
+
+            var isCalled = false;
+
+            await iSome.IfSomeAsync((v) =>
+            {
+                isCalled = true;
+                Assert.Equal(1,v);
+                return Task.CompletedTask;
+            }).ConfigureAwait(false); 
+
+            Assert.True(isCalled);
+        }
+        [Fact]
+        public async Task IfSomeAsync_should_not_call_the_someAsync_action_passed_when_there_is_Nothing()
+        {
+            var none = Option<int>.None;
+
+            var isCalled = false;
+
+            await none.IfSomeAsync((v) =>
+            {
+                isCalled = true;
+                return Task.CompletedTask;
+            }).ConfigureAwait(false);
+
+            Assert.False(isCalled);
+        }
+
     }
 }
