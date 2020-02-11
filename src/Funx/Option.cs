@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Funx.Extensions;
 using Funx.Option;
-
 using Unit = System.ValueTuple;
 
 
@@ -11,13 +10,13 @@ namespace Funx
 {
     public struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
     {
-        public static Option<T> None => Funx.Option.None.Default;
-        public static Option<T> Some(T value) => new Some<T>(value);
-        
+        public static Option<T> None => Helpers.None;
+        public static Option<T> Some(T value) => Helpers.Some(value);
+
         private readonly bool _isSome;
         private readonly T _value;
 
-        private bool IsNone => !_isSome;
+        public bool IsNone => !_isSome;
 
         private Option(T value)
         {
@@ -25,20 +24,11 @@ namespace Funx
             _isSome = true;
         }
 
-        public static implicit operator Option<T>(None _)
-        {
-            return new Option<T>();
-        }
-
-        public static implicit operator Option<T>(Some<T> some)
-        {
-            return new Option<T>(some.Value);
-        }
-
         public static implicit operator Option<T>(T value)
-        {
-            return value == null ? Helpers.None : Some(value);
-        }
+            => value == null ? Helpers.None : Some(value);
+        
+        public static implicit operator Option<T>(None _) => new Option<T>();
+        public static implicit operator Option<T>(Some<T> some) => new Option<T>(some.Value);
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
             => _isSome ? some(_value) : none();
@@ -50,15 +40,29 @@ namespace Funx
 
             return this.MatchAsync(AdapterNoneAsync, someAsync);
         }
-        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T,TR> some)
+
+        public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, TR> some)
         {
             Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
 
             return this.MatchAsync(noneAsync, AdapterSomeAsync);
         }
 
-        public Unit Match<TR>(Action none, Action<T> some)
+        public Unit Match(Action none, Action<T> some)
             => this.Match(none.ToFunc(), some.ToFunc());
+
+        public Unit IfNone(Action none)
+        {
+            if (this.IsNone) none();
+            return new Unit();
+        }
+        public Task IfNoneAsync(Func<Task> noneAsync) => this.IsNone ? noneAsync() : Task.CompletedTask;
+        public Unit IfSome(Action<T> some)
+        {
+            if (this._isSome) some(this._value);
+            return new Unit();
+        }
+        public Task IfSomeAsync(Func<T, Task> someAsync) => this._isSome ? someAsync(this._value) : Task.CompletedTask;
 
 
         public IEnumerable<T> AsEnumerable()
