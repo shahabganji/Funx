@@ -9,10 +9,10 @@ namespace Funx.Extensions
     public static class EitherExtensions
     {
         public static Either<L, RR> Map<L, R, RR>(this Either<L, R> either, Func<R, RR> f)
-            => either.Match<Either<L, RR>>(Left, r => Right(f(r)));
+            => either.Match<Either<L, RR>>(l => Left(l), r => Right(f(r)));
         
         public static Either<LL, R> MapLeft<L, R, LL>(this Either<L, R> either, Func<L, LL> f)
-        => either.Match<Either<LL, R>>(l => Left(f(l)), Right);
+        => either.Match<Either<LL, R>>(l => Left(f(l)), r => Right(r));
 
         public static Either<L, RR> Select<L, R, RR>(this Either<L, R> either, Func<R, RR> f)
             => either.Map(f);
@@ -21,6 +21,6 @@ namespace Funx.Extensions
             => either.Map(act.ToFunc());
 
         public static Either<L, RR> Bind<L, R, RR>(this Either<L, R> either, Func<R, Either<L, RR>> f)
-            => either.Match(Left, f);
+            => either.Match(l => Left(l), f);
     }
 }
