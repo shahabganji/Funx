@@ -11,6 +11,8 @@ namespace Funx
         private readonly T _value;
         private readonly Exception _exception;
 
+        public static Exceptional<T> Success(T value) => Helpers.Success(value);
+
         public bool IsSuccess => _exception == null;
         public bool IsException => _exception != null;
 
