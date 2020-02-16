@@ -65,6 +65,19 @@ namespace Funx
 
         public Unit Match(Action<L> left, Action<R> right)
             => this.Match(left.ToFunc(), right.ToFunc());
+        
+        public Unit WhenLeft(Action<L> left)
+        {
+            if (this.IsLeft) left(_left);
+            return new Unit();
+        }
+        public Task WhenLeftAsync(Func<L,Task> leftAsync) => this.IsLeft ? leftAsync(_left) : Task.CompletedTask;
+        public Unit WhenRight(Action<R> right)
+        {
+            if (this.IsRight) right(_right);
+            return new Unit();
+        }
+        public Task WhenRightAsync(Func<R, Task> rightAsync) => this.IsRight ? rightAsync(_right) : Task.CompletedTask;
 
         public IEnumerable<R> AsEnumerable()
         {
