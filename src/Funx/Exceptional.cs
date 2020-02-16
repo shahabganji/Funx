@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Funx.Exceptional;
+using Funx.Extensions;
+using Unit = System.ValueTuple;
 
 namespace Funx
 {
@@ -33,27 +36,45 @@ namespace Funx
         public static implicit operator Exceptional<T>(Success<T> data) => new Exceptional<T>(data.Value);
 
 
+        public R Match<R>(Func<Exception, R> onException, Func<T, R> onSuccess)
+            => this.IsException
+                ? onException(_exception)
+                : onSuccess(_value);
         
-    }
-
-    namespace  Exceptional
-    {
-        public struct Success<T>
+        public Task<R> MatchAsync<R>(Func<Exception, Task<R>> onExceptionAsync, Func<T, Task<R>> onSuccessAsync)
+            => this.IsSuccess ? onSuccessAsync(_value) : onExceptionAsync(_exception);
+        public Task<R> MatchAsync<R>(Func<Exception,R> onException, Func<T, Task<R>> onSuccessAsync)
         {
-            internal T Value { get; }
+            Task<R> AdapterNoneAsync(Exception exception) => Task.FromResult(onException(exception));
 
-            internal Success(T value)
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-
-                Value = value;
-            }
-
-            public override string ToString()
-            {
-                return $"Success({Value})";
-            }
+            return this.MatchAsync(AdapterNoneAsync, onSuccessAsync);
         }
+
+        public Task<R> MatchAsync<R>(Func<Exception,Task<R>> onExceptionAsync, Func<T, R> onSuccess)
+        {
+            Task<R> AdapterSomeAsync(T t) => Task.FromResult(onSuccess(t));
+
+            return this.MatchAsync(onExceptionAsync, AdapterSomeAsync);
+        }
+        public Unit Match(Action<Exception> onException, Action<T> onSuccess)
+            => this.Match(onException.ToFunc(), onSuccess.ToFunc());
+        
+        public Unit WhenException(Action<Exception> onException)
+        {
+            if (this.IsException) onException(_exception);
+            return new Unit();
+        }
+        public Task WhenExceptionAsync(Func<Exception, Task> onExceptionAsync) 
+            => this.IsException ? onExceptionAsync(_exception) : Task.CompletedTask;
+
+        public Unit WhenSuccess(Action<T> onSuccess)
+        {
+            if (this.IsSuccess) onSuccess(this._value);
+            return new Unit();
+        }
+        public Task WhenSuccessAsync(Func<T, Task> onSuccessAsync)
+            => this.IsSuccess ? onSuccessAsync(this._value) : Task.CompletedTask;
+
+
     }
 }
