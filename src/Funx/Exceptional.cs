@@ -59,20 +59,20 @@ namespace Funx
         public Unit Match(Action<Exception> onException, Action<T> onSuccess)
             => this.Match(onException.ToFunc(), onSuccess.ToFunc());
         
-        public Unit WhenException(Action<Exception> onException)
+        public Unit OnException(Action<Exception> onException)
         {
             if (this.IsException) onException(_exception);
             return new Unit();
         }
-        public Task WhenExceptionAsync(Func<Exception, Task> onExceptionAsync) 
+        public Task OnExceptionAsync(Func<Exception, Task> onExceptionAsync) 
             => this.IsException ? onExceptionAsync(_exception) : Task.CompletedTask;
 
-        public Unit WhenSuccess(Action<T> onSuccess)
+        public Unit OnSuccess(Action<T> onSuccess)
         {
             if (this.IsSuccess) onSuccess(this._value);
             return new Unit();
         }
-        public Task WhenSuccessAsync(Func<T, Task> onSuccessAsync)
+        public Task OnSuccessAsync(Func<T, Task> onSuccessAsync)
             => this.IsSuccess ? onSuccessAsync(this._value) : Task.CompletedTask;
 
 
