@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 
 namespace Funx
@@ -41,5 +39,7 @@ namespace Funx
 
         public static implicit operator ResultDto<T>(Either<IEnumerable<Error>, T> either)
             => either.Match<ResultDto<T>>(errors => errors.ToArray(), data => data);
+        
+        // TODO: Add same operators for Exceptional<T>, and Validation<T>
     }
 }

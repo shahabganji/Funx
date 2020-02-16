@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Funx.Tests.Mocks
+﻿namespace Funx.Tests.Mocks
 {
     class Subject
     {

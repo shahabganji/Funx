@@ -1,8 +1,4 @@
-﻿using static System.Console;
-
-
-
-using static Funx.Helpers;
+﻿using static Funx.Helpers;
 
 
 namespace Funx.Console {

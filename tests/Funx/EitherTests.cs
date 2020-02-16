@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Funx.Either;
 using Xunit;
 
 namespace Funx.Tests
