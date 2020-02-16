@@ -8,31 +8,28 @@ namespace Funx
 {
     public struct Exceptional<T>
     {
-        private readonly Exception _exception;
         private readonly T _value;
+        private readonly Exception _exception;
 
-        public bool IsSuccess { get;  }
-        public bool IsException => !IsSuccess;
+        public bool IsSuccess => _exception == null;
+        public bool IsException => _exception != null;
 
         private Exceptional(Exception exception)
         {
             _exception = exception;
             _value = default;
-
-            IsSuccess = false;
+            
         }
 
         private Exceptional(T data)
         {
-            _exception = default;
-            _value = default;
-
-            IsSuccess = true;
+            _exception = null;
+            _value = data;
         }
 
-        public static implicit operator Exceptional<T>(Exception ex) => new Exceptional<T>(ex);
         public static implicit operator Exceptional<T>(T data) => new Exceptional<T>(data);
         
+        public static implicit operator Exceptional<T>(Exception ex) => new Exceptional<T>(ex);
         public static implicit operator Exceptional<T>(Success<T> data) => new Exceptional<T>(data.Value);
 
 

@@ -7,7 +7,7 @@ namespace Funx.Extensions
     public static class ExceptionalExtensions
     {
         public static Exceptional<R> Map<T, R>(this Exceptional<T> exp, Func<T, R> f)
-            => exp.Match(Exception<R>, data => f(data));
+            => exp.Match<Exceptional<R>>(ex => ex, data => f(data));
         
         public static Exceptional<R> Select<T,R>(this Exceptional<T> exp, Func<T, R> f)
             => exp.Map(f);
@@ -16,6 +16,6 @@ namespace Funx.Extensions
             => exp.Map(act.ToFunc());
 
         public static Exceptional<R> Bind<T, R>(this Exceptional<T> exp, Func<T, Exceptional<R>> f)
-            => exp.Match(Exception<R>, f);
+            => exp.Match(ex => ex, f);
     }
 }
