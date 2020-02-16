@@ -409,7 +409,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            none.IfNone(() => isCalled = true);
+            none.WhenNone(() => isCalled = true);
 
             Assert.True(isCalled);
         }
@@ -420,7 +420,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            iSome.IfNone(() => isCalled = true);
+            iSome.WhenNone(() => isCalled = true);
 
             Assert.False(isCalled);
         }
@@ -431,7 +431,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            await none.IfNoneAsync(() =>
+            await none.WhenNoneAsync(() =>
             {
                 isCalled = true;
                 return Task.CompletedTask;
@@ -446,7 +446,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            await iSome.IfNoneAsync(() =>
+            await iSome.WhenNoneAsync(() =>
             {
                 isCalled = true;
                 return Task.CompletedTask;
@@ -463,7 +463,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            iSome.IfSome((v) =>
+            iSome.WhenSome((v) =>
             {
                 isCalled = true;
                 Assert.Equal(1,v);
@@ -478,7 +478,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            none.IfSome((v) =>
+            none.WhenSome((v) =>
             {
                 isCalled = true;
             });
@@ -493,7 +493,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            await iSome.IfSomeAsync((v) =>
+            await iSome.WhenSomeAsync((v) =>
             {
                 isCalled = true;
                 Assert.Equal(1,v);
@@ -509,7 +509,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            await none.IfSomeAsync((v) =>
+            await none.WhenSomeAsync((v) =>
             {
                 isCalled = true;
                 return Task.CompletedTask;
