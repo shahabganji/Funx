@@ -58,7 +58,7 @@ for:
 
   after_test:
     - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ../../publish
-    - ps: ls publish
+  #  - ps: ls publish
   #  - appveyor PushArtifact publish/Funx.1.0.0.nupkg
 
   artifacts:
