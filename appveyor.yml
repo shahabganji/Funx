@@ -37,9 +37,9 @@ build:
 
 test_script:
   - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
-#  - ps: ls ./tests/Funx/bin/
-#  - ps: ls ./tests/Funx/bin/Debug
-#  - ps: ls ./tests/Funx/bin/Debug/netcoreapp3.1
+  - ps: ls ./tests/Funx/bin/
+  - ps: ls ./tests/Funx/bin/Debug
+  - ps: ls ./tests/Funx/bin/Debug/netcoreapp3.1
   - ps: coverlet .\tests\Funx\bin\Debug\netcoreapp3.1\Funx.Tests.dll --target "dotnet" --targetargs "test --no-build" --format "opencover" --output "./funx_coverage.xml"
   - codecov -f "funx_coverage.xml"
 
