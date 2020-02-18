@@ -263,5 +263,40 @@ namespace Funx.Tests
             Assert.False(either.IsRight);
         }
 
+
+        [Fact]
+        public void ToOption_should_convert_Either_of_R_to_Option_of_R()
+        {
+            Either<bool,string> either = Helpers.Right("shahab");
+
+            var option = either.ToOption();
+            
+            Assert.True(option.IsSome);
+
+            option
+                .WhenNone(() => Assert.True(false))
+                .WhenSome(v =>
+                {
+                    Assert.Equal("shahab", v);
+                });
+        }
+        
+        [Fact]
+        public void Either_should_cast_to_Option_of_R()
+        {
+            Either<bool,string> either = Helpers.Right("shahab");
+
+            Option<string> option = either;
+            
+            Assert.True(option.IsSome);
+
+            option
+                .WhenNone(() => Assert.True(false))
+                .WhenSome(v =>
+                {
+                    Assert.Equal("shahab", v);
+                });
+        }
+
     }
 }
