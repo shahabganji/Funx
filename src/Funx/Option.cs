@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Funx.Extensions;
 using Funx.Option;
@@ -76,6 +77,10 @@ namespace Funx
             return this;
         }
 
+        // ToDo: add unit tests
+        public Either<L, T> ToEither<L>(Func<L> leftFactory)
+            => this.Match<Either<L,T>>(() => leftFactory(), v => v);
+        
 
         public IEnumerable<T> AsEnumerable()
         {
