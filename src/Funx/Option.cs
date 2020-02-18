@@ -47,9 +47,7 @@ namespace Funx
 
             return this.MatchAsync(noneAsync, AdapterSomeAsync);
         }
-
-        public Unit Match(Action none, Action<T> some)
-            => this.Match(none.ToFunc(), some.ToFunc());
+        
 
         public Option<T> WhenNone(Action none)
         {

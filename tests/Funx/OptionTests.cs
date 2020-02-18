@@ -372,53 +372,16 @@ namespace Funx.Tests
         }
 
         [Fact]
-        public void Match_should_call_some_action_passed_when_there_is_a_value()
-        {
-            var iSome = Option<int>.Some(1);
-
-            iSome.Match(() =>
-            {
-                Assert.True(false);
-            }, v =>
-            {
-                Assert.Equal(1, v);
-                Assert.True(true);
-            });
-            
-            // And with WhenXX methods, it looks like the following:
-            iSome.WhenNone(() =>
-            {
-                Assert.True(false); // this is never get called, since the Option has a value
-            }).WhenSome( v =>
-            {
-                Assert.Equal(1, v);
-                Assert.True(true);
-            });
-            
-        }
-
-        [Fact]
-        public void Match_should_call_none_action_passed_when_there_is_Nothing()
-        {
-            var none = Option<int>.None;
-
-            none.Match(() =>
-            {
-                Assert.True(true);
-            }, v =>
-            {
-                Assert.True(false);
-            });
-        }
-
-        [Fact]
         public void IfNone_should_call_the_none_action_passed_when_there_is_Nothing()
         {
             var none = Option<int>.None;
 
             var isCalled = false;
 
-            none.WhenNone(() => isCalled = true);
+            none
+                .WhenNone(() => isCalled = true)
+                .WhenSome(_ => isCalled = false);
+            
 
             Assert.True(isCalled);
         }
@@ -429,7 +392,9 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            iSome.WhenNone(() => isCalled = true);
+            iSome
+                .WhenNone(() => isCalled = true)
+                .WhenSome(_ => isCalled = false);
 
             Assert.False(isCalled);
         }
