@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Funx.Either;
 using Funx.Extensions;
+using static Funx.Helpers;
 using Unit = System.ValueTuple;
 
 namespace Funx
@@ -40,6 +41,9 @@ namespace Funx
 
         public static implicit operator Either<L, R>(Left<L> left) => new Either<L, R>(left.Value);
         public static implicit operator Either<L, R>(Right<R> right) => new Either<L, R>(right.Value);
+
+        // ToDo: add unit tests for this 
+        public static implicit operator Option<R>(Either<L, R> either) => either.ToOption(); 
 
 
         public TR Match<TR>(Func<L, TR> left, Func<R, TR> right)
@@ -79,11 +83,14 @@ namespace Funx
         }
         public Task WhenRightAsync(Func<R, Task> rightAsync) => this.IsRight ? rightAsync(_right) : Task.CompletedTask;
 
+
+        // TODO: Add unit tests for this:
+        public Option<R> ToOption() => this.Match(_ => None, Some);
+        
         public IEnumerable<R> AsEnumerable()
         {
             if (this.IsRight) yield return _right;
         }
-
         public override string ToString()
         {
             return Match(l => $"Left({l})", r => $"Right({r})");
