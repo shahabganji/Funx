@@ -73,7 +73,7 @@ namespace Funx.Tests
                 return Task.FromResult(true);
             }
 
-            var noneCalled = await someOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync);
+            var noneCalled = await someOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync).ConfigureAwait(false);
 
             Assert.True(noneCalled);
         }
@@ -85,8 +85,6 @@ namespace Funx.Tests
 
             bool NoneFunc() => false;
             Task<bool> SomeAsync(int value) => Task.FromResult(value == 11);
-
-            var xxx = SynchronizationContext.Current;
 
             var hasCalledSome = await option.MatchAsync(NoneFunc, SomeAsync)
                 .ConfigureAwait(false);
@@ -386,6 +384,17 @@ namespace Funx.Tests
                 Assert.Equal(1, v);
                 Assert.True(true);
             });
+            
+            // And with WhenXX methods, it looks like the following:
+            iSome.WhenNone(() =>
+            {
+                Assert.True(false); // this is never get called, since the Option has a value
+            }).WhenSome( v =>
+            {
+                Assert.Equal(1, v);
+                Assert.True(true);
+            });
+            
         }
 
         [Fact]
