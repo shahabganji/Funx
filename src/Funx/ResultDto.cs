@@ -5,8 +5,8 @@ namespace Funx
 {
     public class ResultDto<T>
     {
-        public bool Succeeded { get; }
-        public bool Failed => !this.Succeeded;
+        public bool Succeeded => this.Errors == null;
+        public bool Failed => this.Errors != null;
 
         public T Data { get; }
         public IReadOnlyCollection<Error> Errors { get; }
@@ -14,13 +14,13 @@ namespace Funx
         private ResultDto(T data)
         {
             this.Data = data;
-            this.Succeeded = true;
+            this.Errors = null;
         }
         
         private ResultDto(params Error[] errors)
         {
+            this.Data = default;
             this.Errors = errors;
-            this.Succeeded = false;
         }
 
 
@@ -40,6 +40,9 @@ namespace Funx
         public static implicit operator ResultDto<T>(Either<IEnumerable<Error>, T> either)
             => either.Match<ResultDto<T>>(errors => errors.ToArray(), data => data);
         
-        // TODO: Add same operators for Exceptional<T>, and Validation<T>
+        
+        public static implicit operator ResultDto<T>(Exceptional<T> either)
+            => either.Match<ResultDto<T>>(exp => new Error(exp.Message), data => data);
+
     }
 }

@@ -9,8 +9,8 @@ namespace Funx
 {
     public struct Either<L, R>
     {
-        public static Either<L, R> Left(L l) => new Left<L>(l);
-        public static Either<L, R> Right(R r) => new Right<R>(r);
+        public static Either<L, R> Left(L l) => Helpers.Left(l);
+        public static Either<L, R> Right(R r) => Helpers.Right(r);
 
         private readonly L _left;
         private readonly R _right;

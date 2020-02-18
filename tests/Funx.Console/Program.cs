@@ -7,8 +7,8 @@ namespace Funx.Console {
     {
         private static void Main(string[] args)
         {
-            Either<string, string> either = Right("right");
-            var either2 = Either<string, string>.Left("left");
+            var either = Right<string>("right");
+            var either2 = Either<string, int>.Left("left");
 
         }
     }
