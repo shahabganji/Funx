@@ -27,14 +27,16 @@ namespace Funx
 
         public static implicit operator Option<T>(T value)
             => value == null ? Helpers.None : Some(value);
-        
+
         public static implicit operator Option<T>(None _) => new Option<T>();
         public static implicit operator Option<T>(Some<T> some) => new Option<T>(some.Value);
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
             => IsSome ? some(_value) : none();
+
         public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, Task<TR>> someAsync)
             => IsSome ? someAsync(_value) : noneAsync();
+
         public Task<TR> MatchAsync<TR>(Func<TR> none, Func<T, Task<TR>> someAsync)
         {
             Task<TR> AdapterNoneAsync() => Task.FromResult(none());
@@ -48,21 +50,22 @@ namespace Funx
 
             return this.MatchAsync(noneAsync, AdapterSomeAsync);
         }
-        
+
 
         public Option<T> WhenNone(Action none)
         {
             if (this.IsNone) none();
             return this;
         }
+
         public async Task<Option<T>> WhenNoneAsync(Func<Task> noneAsync)
         {
             if (this.IsNone)
                 await noneAsync().ConfigureAwait(false);
-            
+
             return this;
         }
-        
+
         public Option<T> WhenSome(Action<T> some)
         {
             if (this.IsSome) some(this._value);
@@ -71,7 +74,7 @@ namespace Funx
 
         public async Task<Option<T>> WhenSomeAsync(Func<T, Task> someAsync)
         {
-            if( this.IsSome)
+            if (this.IsSome)
                 await someAsync(this._value).ConfigureAwait(false);
 
             return this;
@@ -79,14 +82,23 @@ namespace Funx
 
         // ToDo: add unit tests
         public Either<L, T> ToEither<L>(Func<L> leftFactory)
-            => this.Match<Either<L,T>>(() => leftFactory(), v => v);
-        
+            => this.Match<Either<L, T>>(() => leftFactory(), v => v);
+
 
         public IEnumerable<T> AsEnumerable()
         {
             if (this.IsSome)
                 yield return this._value;
         }
+
+        
+        // Todo: add unit tests
+        public T Unwrap(T defaultValue = default) => this.IsNone ? defaultValue : this._value;
+        public T Unwrap(Func<T> defaultValueFunc) => this.IsNone ? defaultValueFunc() : this._value;
+        public Task<T> Unwrap(Func<Task<T>> defaultValueFuncAsync)
+            => this.IsNone
+                ? defaultValueFuncAsync()
+                : Task.FromResult(this._value);
 
         #region Equality methods:
 
