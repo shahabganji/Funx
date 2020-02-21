@@ -91,10 +91,11 @@ namespace Funx
                 yield return this._value;
         }
 
-        
+
         // Todo: add unit tests
         public T Unwrap(T defaultValue = default) => this.IsNone ? defaultValue : this._value;
         public T Unwrap(Func<T> defaultValueFunc) => this.IsNone ? defaultValueFunc() : this._value;
+
         public Task<T> Unwrap(Func<Task<T>> defaultValueFuncAsync)
             => this.IsNone
                 ? defaultValueFuncAsync()
