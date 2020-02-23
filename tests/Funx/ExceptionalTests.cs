@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Funx.Exceptional;
 using Funx.Option;
 using Xunit;
@@ -35,7 +36,7 @@ namespace Funx.Tests
 
             Assert.True(exceptional.IsException);
 
-            exceptional.OnException(ex => { Assert.Equal(ex, exception); });
+            exceptional.OnException(ex => Assert.Equal(exception, ex));
         }
 
         [Fact]
@@ -46,9 +47,42 @@ namespace Funx.Tests
 
             Assert.True(exceptional.IsSuccess);
 
-            exceptional.OnSuccess(data => { Assert.Equal(data, value); });
+            exceptional.OnSuccess(data => Assert.Equal(value, data));
         }
 
+        [Fact]
+        public async Task OnExceptionAsync_should_be_called_when_on_it_is_on_exception_state()
+        {
+            var exception = new InvalidCastException();
+            Exceptional<int> exceptional = exception;
+
+            Assert.True(exceptional.IsException);
+
+            Task ShouldBeCalledOnException(Exception ex)
+            {
+                Assert.Equal(exception, ex);
+                return Task.CompletedTask;
+            }
+
+            await exceptional.OnExceptionAsync(ShouldBeCalledOnException).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task OnSuccessAsync_should_be_called_when_on_it_is_on_success_state()
+        {
+            const string value = "sample";
+            Exceptional<string> exceptional = value;
+
+            Assert.True(exceptional.IsSuccess);
+
+            Task ShouldBeCalledOnSuccess(string data)
+            {
+                Assert.Equal(value, data);
+                return Task.CompletedTask;
+            }
+
+            await exceptional.OnSuccessAsync(ShouldBeCalledOnSuccess);
+        }
        
         
     }

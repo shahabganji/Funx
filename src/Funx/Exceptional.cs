@@ -55,8 +55,6 @@ namespace Funx
 
             return this.MatchAsync(onExceptionAsync, AdapterSomeAsync);
         }
-        public Unit Match(Action<Exception> onException, Action<T> onSuccess)
-            => this.Match(onException.ToFunc(), onSuccess.ToFunc());
         
         public Unit OnException(Action<Exception> onException)
         {
