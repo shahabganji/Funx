@@ -41,7 +41,7 @@ namespace Funx
         public static implicit operator Either<L, R>(Left<L> left) => new Either<L, R>(left.Value);
         public static implicit operator Either<L, R>(Right<R> right) => new Either<L, R>(right.Value);
 
-        public static implicit operator Option<R>(Either<L, R> either) => either.ToOption();
+        public static explicit operator Option<R>(Either<L, R> either) => either.ToOption();
 
         public TR Match<TR>(Func<L, TR> left, Func<R, TR> right)
             => IsRight ? right(_right) : left(_left);
@@ -64,10 +64,6 @@ namespace Funx
         }
 
 
-        // ToDO: remove this redundant method, and change the result of WhenXX methods
-        public Unit Match(Action<L> left, Action<R> right)
-            => this.Match(left.ToFunc(), right.ToFunc());
-        
         public Unit WhenLeft(Action<L> left)
         {
             if (this.IsLeft) left(_left);

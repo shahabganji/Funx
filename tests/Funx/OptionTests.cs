@@ -492,5 +492,69 @@ namespace Funx.Tests
             Assert.False(isCalled);
         }
 
+        [Fact]
+        public void ToEither_should_return_either_with_right_side_if_options_is_not_none()
+        {
+            var options = Option<int>.Some(11);
+
+            var either = options.ToEither<string>(() => "invalid number");
+
+            either.WhenRight(v => Assert.Equal(11, v));
+            either.WhenLeft(_ => Assert.False(true));
+        }
+
+        [Fact]
+        public void ToEither_should_call_the_leftFactory_method_when_none()
+        {
+            var options = Option<int>.None;
+
+            var either = options.ToEither<string>(() => "invalid number");
+
+            either.WhenRight(v => Assert.True(false));
+            either.WhenLeft(msg => Assert.Equal("invalid number" , msg));
+        }
+
+        [Fact]
+        public void Unwrap_should_return_the_value()
+        {
+            Option<int> option = 11;
+
+            var value = option.Unwrap();
+
+            Assert.Equal(11,value);
+
+        }
+
+        [Fact]
+        public void Unwrap_should_return_the_provided_default_when_none()
+        {
+            Option<int> option = Helpers.None;
+
+            var value = option.Unwrap(11);
+
+            Assert.Equal(11,value);
+        }
+
+        [Fact]
+        public void Unwrap_should_call_the_default_factory_when_none()
+        {
+            Option<int> option = Helpers.None;
+
+            var value = option.Unwrap(() => 11);
+
+            Assert.Equal(11,value);
+        }
+
+        [Fact]
+        public async Task UnwrapAsync_should_call_the_default_factory_when_none()
+        {
+            Option<int> option = Helpers.None;
+
+            var value = await option.UnwrapAsync(() => Task.FromResult(11))
+                .ConfigureAwait(false);
+
+            Assert.Equal(11,value);
+        }
+
     }
 }

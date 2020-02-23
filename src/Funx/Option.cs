@@ -96,7 +96,7 @@ namespace Funx
         public T Unwrap(T defaultValue = default) => this.IsNone ? defaultValue : this._value;
         public T Unwrap(Func<T> defaultValueFunc) => this.IsNone ? defaultValueFunc() : this._value;
 
-        public Task<T> Unwrap(Func<Task<T>> defaultValueFuncAsync)
+        public Task<T> UnwrapAsync(Func<Task<T>> defaultValueFuncAsync)
             => this.IsNone
                 ? defaultValueFuncAsync()
                 : Task.FromResult(this._value);
