@@ -39,7 +39,7 @@ namespace Funx.Tests
         }
 
         [Fact]
-        public void Data_of_T_should_be_cast_to_Exceptional()
+        public void Data_of_T_should_cast_to_Exceptional()
         {
             const string value = "sample";
             Exceptional<string> exceptional = value;
