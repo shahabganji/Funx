@@ -1,14 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using Funx.Exceptional;
-using Funx.Option;
 using Xunit;
-using Xunit.Abstractions;
 using static Funx.Helpers;
 
 namespace Funx.Tests
 {
-    public class ExceptionalTests
+    public class ExceptionalSpec
     {
         [Fact]
         public void IsSuccess_Should_return_true_when_not_an_Exception()

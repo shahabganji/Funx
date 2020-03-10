@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using Funx.Extensions;
 using Funx.Option;
 using Xunit;
+using FluentAssertions;
 using static Funx.Helpers;
 
 namespace Funx.Tests
 {
-    public class OptionTests
+    public class OptionSpec
     {
         [Fact]
         public void NoneShouldBeAnOptionOfT()
@@ -534,6 +535,15 @@ namespace Funx.Tests
 
             Assert.Equal(11,value);
         }
+        [Fact]
+        public void Unwrap_should_return_the_value_when_in_some_state()
+        {
+            Option<int> option = 11;
+
+            var value = option.Unwrap(12);
+
+            Assert.Equal(11,value);
+        }
 
         [Fact]
         public void Unwrap_should_call_the_default_factory_when_none()
@@ -543,6 +553,15 @@ namespace Funx.Tests
             var value = option.Unwrap(() => 11);
 
             Assert.Equal(11,value);
+        }
+        
+        [Fact]
+        public void Unwrap_should_return_the_value_and_not_call_the_default_factory_when_some()
+        {
+            Option<int> option = 11; 
+            var value = option.Unwrap(() => 0);
+
+            value.Should().Be(11);
         }
 
         [Fact]
@@ -555,6 +574,43 @@ namespace Funx.Tests
 
             Assert.Equal(11,value);
         }
+        [Fact]
+        public async Task UnwrapAsync_should_return_value_and_not_call_the_default_factory_when_some()
+        {
+            Option<int> option = 11;
+
+            var value = await option.UnwrapAsync(() => Task.FromResult(0))
+                .ConfigureAwait(false);
+
+            value.Should().Be(11);
+        }
+
+        [Fact]
+        public void ToEither_should_return_an_either_with_right_value_as_value_of_option()
+        {
+            var option = Option<int>.Some(11);
+
+            var either = option.ToEither(() => "invalid value");
+
+            either.Should().BeAssignableTo<Either<string, int>>();
+            either.IsRight.Should().BeTrue();
+            either.WhenRight(v => v.Should().Be(11));
+            
+        }
+        
+        [Fact]
+        public void ToEither_should_return_an_either_with_left_value()
+        {
+            var option = Option<int>.None;
+
+            var either = option.ToEither(() => "invalid value");
+
+            either.Should().BeAssignableTo<Either<string, int>>();
+            either.IsLeft.Should().BeTrue();
+            either.WhenLeft(v => v.Should().Be("invalid value"));
+            
+        }
+
 
     }
 }

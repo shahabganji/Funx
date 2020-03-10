@@ -1,4 +1,3 @@
-using System;
 using Funx.Option;
 using Funx.Either;
 using Funx.Exceptional;

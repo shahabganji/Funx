@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Funx.Extensions;
 using Funx.Option;
 using Unit = System.ValueTuple;
 
 
 namespace Funx
 {
-    public struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
+    public readonly struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
     {
         public static Option<T> None => Helpers.None;
         public static Option<T> Some(T value) => Helpers.Some(value);
@@ -80,7 +78,6 @@ namespace Funx
             return this;
         }
 
-        // ToDo: add unit tests
         public Either<L, T> ToEither<L>(Func<L> leftFactory)
             => this.Match<Either<L, T>>(() => leftFactory(), v => v);
 
@@ -91,8 +88,6 @@ namespace Funx
                 yield return this._value;
         }
 
-
-        // Todo: add unit tests
         public T Unwrap(T defaultValue = default) => this.IsNone ? defaultValue : this._value;
         public T Unwrap(Func<T> defaultValueFunc) => this.IsNone ? defaultValueFunc() : this._value;
 
@@ -100,8 +95,6 @@ namespace Funx
             => this.IsNone
                 ? defaultValueFuncAsync()
                 : Task.FromResult(this._value);
-
-        #region Equality methods:
 
         public bool Equals(None other) => IsNone;
 
@@ -120,8 +113,6 @@ namespace Funx
                 return (IsSome.GetHashCode() * 397) ^ EqualityComparer<T>.Default.GetHashCode(_value);
             }
         }
-
-        #endregion
 
         #region Operators:
 

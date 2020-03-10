@@ -1,6 +1,5 @@
 using System;
 using Unit = System.ValueTuple;
-using static Funx.Helpers;
 
 namespace Funx.Extensions
 {

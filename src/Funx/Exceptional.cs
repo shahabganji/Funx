@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Funx.Exceptional;
-using Funx.Extensions;
 using Unit = System.ValueTuple;
 
 namespace Funx

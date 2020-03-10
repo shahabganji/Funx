@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Funx.Tests
 {
-    public class EitherTests
+    public class EitherSpec
     {
         [Fact]
         public void AsEnumerable_should_return_nothing_if_Either_is_left()

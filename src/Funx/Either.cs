@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Funx.Either;
-using Funx.Extensions;
 using static Funx.Helpers;
 using Unit = System.ValueTuple;
 
@@ -64,16 +63,14 @@ namespace Funx
         }
 
 
-        public Unit WhenLeft(Action<L> left)
+        public void WhenLeft(Action<L> left)
         {
             if (this.IsLeft) left(_left);
-            return new Unit();
         }
         public Task WhenLeftAsync(Func<L,Task> leftAsync) => this.IsLeft ? leftAsync(_left) : Task.CompletedTask;
-        public Unit WhenRight(Action<R> right)
+        public void WhenRight(Action<R> right)
         {
             if (this.IsRight) right(_right);
-            return new Unit();
         }
         public Task WhenRightAsync(Func<R, Task> rightAsync) => this.IsRight ? rightAsync(_right) : Task.CompletedTask;
 
