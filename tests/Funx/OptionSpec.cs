@@ -611,6 +611,20 @@ namespace Funx.Tests
             
         }
 
+        [Fact]
+        public void Bind_from_either_to_option()
+        {
+            Either<string,int> FromInt() => 1;
+            Option<string> FromString(int i) => i.ToString();
+
+            var x = FromInt().Bind(FromString);
+
+            x.IsSome.Should().BeTrue();
+            x.Should().BeAssignableTo<Option<string>>();
+            x.WhenSome(s => s.Should().Be("1"));
+
+        }
+
 
     }
 }

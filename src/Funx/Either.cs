@@ -7,7 +7,7 @@ using Unit = System.ValueTuple;
 
 namespace Funx
 {
-    public struct Either<L, R>
+    public readonly struct Either<L, R>
     {
         public static Either<L, R> Left(L l) => Helpers.Left(l);
         public static Either<L, R> Right(R r) => Helpers.Right(r);

@@ -20,5 +20,8 @@ namespace Funx.Extensions
 
         public static Either<L, RR> Bind<L, R, RR>(this Either<L, R> either, Func<R, Either<L, RR>> f)
             => either.Match(l => l, f);
+
+        public static Option<T> Bind<L, R, T>(this Either<L, R> either, Func<R, Option<T>> f)
+            => either.Match<Option<T>>(_ => None, f);
     }
 }
