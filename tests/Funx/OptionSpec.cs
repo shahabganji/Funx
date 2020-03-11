@@ -624,6 +624,19 @@ namespace Funx.Tests
             x.WhenSome(s => s.Should().Be("1"));
 
         }
+        
+        [Fact]
+        public void Bind_from_either_to_option_returns_None_when_either_is_left()
+        {
+            Either<string,int> FromInt() => "left value";
+            Option<string> FromString(int i) => i.ToString();
+
+            var x = FromInt().Bind(FromString);
+
+            x.IsNone.Should().BeTrue();
+            x.Should().BeAssignableTo<Option<string>>();
+            
+        }
 
 
     }
