@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Funx.Extensions;
 using static Funx.Helpers;
 using Xunit;
@@ -165,12 +166,27 @@ namespace Funx.Tests.Extensions
             Assert.NotEqual(result, None);
             Assert.Equal($"VALUE", result);
         }
+        
+        [Fact]
+        public void Where_should_return_None_when_the_option_is_none()
+        {
+            var option = Option<string>.None;
+            
+            var result =
+                from s in option
+                where s.StartsWith("v")
+                select s.ToUpper();
+
+            result.IsNone.Should().BeTrue();
+        }
 
         [Fact]
         public async Task Where_should_apply_a_false_predicate_and_return_None_when_there_is_an_option()
         {
             var result =
-                (await _taskOptionWithNone.Where(s => s.StartsWith("zzz")).ConfigureAwait(false)).Select(s =>
+                (await _taskOptionWithNone
+                    .Where(s => s.StartsWith("zzz")).ConfigureAwait(false))
+                .Select(s =>
                     s.ToUpper());
 
             Assert.Equal(result, None);
