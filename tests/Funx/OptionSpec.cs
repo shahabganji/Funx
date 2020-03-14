@@ -597,7 +597,7 @@ namespace Funx.Tests
             either.WhenRight(v => v.Should().Be(11));
             
         }
-        
+
         [Fact]
         public void ToEither_should_return_an_either_with_left_value()
         {
@@ -608,36 +608,8 @@ namespace Funx.Tests
             either.Should().BeAssignableTo<Either<string, int>>();
             either.IsLeft.Should().BeTrue();
             either.WhenLeft(v => v.Should().Be("invalid value"));
-            
-        }
-
-        [Fact]
-        public void Bind_from_either_to_option()
-        {
-            Either<string,int> FromInt() => 1;
-            Option<string> FromString(int i) => i.ToString();
-
-            var x = FromInt().Bind(FromString);
-
-            x.IsSome.Should().BeTrue();
-            x.Should().BeAssignableTo<Option<string>>();
-            x.WhenSome(s => s.Should().Be("1"));
 
         }
-        
-        [Fact]
-        public void Bind_from_either_to_option_returns_None_when_either_is_left()
-        {
-            Either<string,int> FromInt() => "left value";
-            Option<string> FromString(int i) => i.ToString();
-
-            var x = FromInt().Bind(FromString);
-
-            x.IsNone.Should().BeTrue();
-            x.Should().BeAssignableTo<Option<string>>();
-            
-        }
-
 
     }
 }
