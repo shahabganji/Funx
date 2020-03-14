@@ -40,7 +40,7 @@ namespace Funx
             => either.ToResult();
 
         public static implicit operator Result<T>(Exceptional<T> exceptional)
-            => exceptional.Match<Result<T>>(exp => new Error(exp.Message), data => data);
+            => exceptional.ToResult();
 
     }
 }

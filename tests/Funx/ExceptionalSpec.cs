@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 using static Funx.Helpers;
 
@@ -80,7 +81,36 @@ namespace Funx.Tests
 
             await exceptional.OnSuccessAsync(ShouldBeCalledOnSuccess);
         }
-       
+
+        [Fact]
+        public void Match_should_convert_the_underlying_type_to_R()
+        {
+            var data = Exceptional<int>.Success(1);
+
+            var result =data.Match(
+                _ => "no error",
+                d => d.ToString()
+            );
+
+            result.Should().BeOfType<string>();
+            result.Should().Be("1");
+
+        }
+        
+        [Fact]
+        public void Match_should_convert_the_underlying_exception_to_R()
+        {
+            Exceptional<int> data = new InvalidOperationException("error"); 
+
+            var result =data.Match(
+                ex => ex.Message,
+                d => d.ToString()
+            );
+
+            result.Should().BeOfType<string>();
+            result.Should().Be("error");
+
+        }
         
     }
 }

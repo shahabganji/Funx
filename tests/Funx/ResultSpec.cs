@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Funx.Tests
 {
@@ -95,6 +97,30 @@ namespace Funx.Tests
             result.Failed.Should().BeTrue();
             result.Errors.Should().NotBeEmpty();
             result.Errors.Count.Should().Be(2);
+        }
+        
+        [Fact]
+        public void Exceptional_should_be_converted_to_failed_result_when_it_is_exception()
+        {
+            Exceptional<int> exceptional = new InvalidOperationException("exp");
+            
+            Result<int> result = exceptional;
+
+            result.Failed.Should().BeTrue();
+            result.Errors.Should().NotBeNullOrEmpty();
+            result.Errors.First().Message.Should().Be("exp");
+
+        }
+        
+        [Fact]
+        public void Exceptional_should_be_converted_to_failed_result_when_it_is_success()
+        {
+            Exceptional<int> exceptional = 11;
+            
+            Result<int> result = exceptional;
+
+            result.Succeeded.Should().BeTrue();
+            result.Data.Should().Be(11);
         }
         
     }
