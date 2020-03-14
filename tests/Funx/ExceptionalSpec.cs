@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Funx.Exceptional;
 using Xunit;
 using static Funx.Helpers;
 
@@ -35,6 +36,13 @@ namespace Funx.Tests
             Assert.True(exceptional.IsException);
 
             exceptional.OnException(ex => Assert.Equal(exception, ex));
+        }
+
+        [Fact]
+        public void Success_should_throw_exception_when_value_is_null()
+        {
+            Action act = () => Success<string>(null);
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
@@ -110,6 +118,29 @@ namespace Funx.Tests
             result.Should().BeOfType<string>();
             result.Should().Be("error");
 
+        }
+
+        [Fact]
+        public void Exceptional_should_be_cast_to_option_when_is_success()
+        {
+            Exceptional<int> exceptional = 1;
+
+            var option = (Option<int>) exceptional;
+
+            option.IsSome.Should().BeTrue();
+            var data = option.Unwrap();
+            data.Should().Be(1);
+        }
+        
+        [Fact]
+        public void Exceptional_should_cast_to_None_Option_when_it_is_exception()
+        {
+            Exceptional<int> exceptional = new InvalidOperationException("invalid");
+
+            var option = (Option<int>) exceptional;
+
+            option.IsNone.Should().BeTrue();
+            (option == None).Should().BeTrue();
         }
         
     }

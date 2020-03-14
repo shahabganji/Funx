@@ -16,7 +16,7 @@ namespace Funx.Extensions
 
         public static Exceptional<R> Bind<T, R>(this Exceptional<T> exp, Func<T, Exceptional<R>> f)
             => exp.Match(ex => ex, f);
-        
+
         public static  Result<T> ToResult<T>(this Exceptional<T> exceptional)
             => exceptional.Match<Result<T>>(exp => new Error(exp.Message), data => data);
     }

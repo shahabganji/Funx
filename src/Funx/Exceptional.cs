@@ -33,6 +33,9 @@ namespace Funx
         public static implicit operator Exceptional<T>(Exception ex) => new Exceptional<T>(ex);
         public static implicit operator Exceptional<T>(Success<T> data) => new Exceptional<T>(data.Value);
 
+        public static explicit operator Option<T>(Exceptional<T> exceptional)
+            => exceptional.ToOption();
+
 
         public R Match<R>(Func<Exception, R> onException, Func<T, R> onSuccess)
             => this.IsException
@@ -69,5 +72,9 @@ namespace Funx
         public Task OnSuccessAsync(Func<T, Task> onSuccessAsync)
             => this.IsSuccess ? onSuccessAsync(this._value) : Task.CompletedTask;
 
+        public Option<T> ToOption()
+            => this.Match<Option<T>>(
+                _ => Helpers.None,
+                data => data);
     }
 }
