@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using static Funx.Helpers;
 using Unit = System.ValueTuple;
 
@@ -32,5 +34,16 @@ namespace Funx.Extensions
             => either.Match(
                 _ => None, 
                 f);
+        
+        public static Result<T> ToResult<T>(this Either<Error, T> either)
+            => either.Match<Result<T>>(
+                error => error,
+                data => data);
+        
+        public static Result<T> ToResult<T>(this Either<IEnumerable<Error>, T> either)
+            => either.Match<Result<T>>(
+                errors => errors.ToArray(),
+                data => data);
+        
     }
 }

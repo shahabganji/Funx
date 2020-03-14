@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Funx.Extensions;
 
 namespace Funx
 {
@@ -31,15 +32,13 @@ namespace Funx
 
         public static implicit operator Result<T>(Error[] errors)
             => new Result<T>(errors);
-
-
+        
         public static implicit operator Result<T>(Either<Error, T> either)
-            => either.Match<Result<T>>(error => error, data => data);
+            => either.ToResult();
 
         public static implicit operator Result<T>(Either<IEnumerable<Error>, T> either)
-            => either.Match<Result<T>>(errors => errors.ToArray(), data => data);
-        
-        
+            => either.ToResult();
+
         public static implicit operator Result<T>(Exceptional<T> exceptional)
             => exceptional.Match<Result<T>>(exp => new Error(exp.Message), data => data);
 
