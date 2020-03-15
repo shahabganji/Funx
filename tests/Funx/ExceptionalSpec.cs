@@ -142,6 +142,85 @@ namespace Funx.Tests
             option.IsNone.Should().BeTrue();
             (option == None).Should().BeTrue();
         }
+
+        [Fact]
+        public async Task MatchAsync_should_run_the_onSuccessAsync_when_success()
+        {
+            var exceptional = Success(11);
+
+            var result = await exceptional.MatchAsync(
+                 (ex) => Task.FromResult("no error"),
+                 v => Task.FromResult(v.ToString())
+            ).ConfigureAwait(false);
+
+            result.Should().Be("11");
+        }
+        
+        [Fact]
+        public async Task MatchAsync_should_run_the_onExceptionAsync_when_exception()
+        {
+            Exceptional<int> exceptional = new InvalidOperationException("invalid");
+
+            var result = await exceptional.MatchAsync(
+                (ex) => Task.FromResult(ex.Message),
+                v => Task.FromResult(v.ToString())
+            ).ConfigureAwait(false);
+
+            result.Should().Be("invalid");
+        }
+        
+        
+        [Fact]
+        public async Task MatchAsync_should_run_the_onSuccessAsync_For_onSuccessSync_overload_when_success()
+        {
+            var exceptional = Success(11);
+
+            var result = await exceptional.MatchAsync(
+                (ex) => "no error",
+                v => Task.FromResult(v.ToString())
+            ).ConfigureAwait(false);
+
+            result.Should().Be("11");
+        }
+        
+        [Fact]
+        public async Task MatchAsync_should_run_the_onExceptionAsync_For_onSuccessSync_overload_when_exception()
+        {
+            Exceptional<int> exceptional = new InvalidOperationException("invalid");
+
+            var result = await exceptional.MatchAsync(
+                (ex) => ex.Message,
+                v => Task.FromResult(v.ToString())
+            ).ConfigureAwait(false);
+
+            result.Should().Be("invalid");
+        }
+        
+        [Fact]
+        public async Task MatchAsync_should_run_the_onSuccessAsync_For_onExceptionsSync_overload_when_success()
+        {
+            var exceptional = Success(11);
+
+            var result = await exceptional.MatchAsync(
+                (ex) => Task.FromResult("no error"),
+                v => v.ToString()
+            ).ConfigureAwait(false);
+
+            result.Should().Be("11");
+        }
+        
+        [Fact]
+        public async Task MatchAsync_should_run_the_onExceptionAsync_For_onExceptionsSync_overload_when_exception()
+        {
+            Exceptional<int> exceptional = new InvalidOperationException("invalid");
+
+            var result = await exceptional.MatchAsync(
+                (ex) => Task.FromResult(ex.Message),
+                v => v.ToString()
+            ).ConfigureAwait(false);
+
+            result.Should().Be("invalid");
+        }
         
     }
 }
