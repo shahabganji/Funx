@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Funx.Tests.Extensions
 {
-    public class NameValueCollectionExtensionsTests
+    public class NameValueCollectionExtensionsSpec
     {
         [Fact]
         public void ShouldReturnAnOptionWhenValueExists()

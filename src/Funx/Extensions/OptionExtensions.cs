@@ -51,7 +51,11 @@ namespace Funx.Extensions
             => @this.MatchAsync(() => None, funcAsync);
         
         public static Option<T> Where<T>(this Option<T> @this, Func<T, bool> predicate)
-            => @this.Match(() => None, t => predicate(t) ? Some(t) : None);
+            => @this.Match(
+                () => None,
+                t => predicate(t) 
+                    ? Some(t)
+                    : None);
 
         public static Option<Unit> ForEach<T>(this Option<T> @this, Action<T> action)
             => @this.Map(action.ToFunc());

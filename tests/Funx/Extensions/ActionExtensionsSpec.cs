@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Funx.Tests.Extensions
 {
-    public class ActionExtensionsTests
+    public class ActionExtensionsSpec
     {
         [Fact]
         public void ShouldToFuncCallTheAction()

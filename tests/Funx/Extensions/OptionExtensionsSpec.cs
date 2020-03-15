@@ -8,7 +8,7 @@ using static Funx.Helpers;
 
 namespace Funx.Tests.Extensions
 {
-    public class OptionExtensionsTests
+    public class OptionExtensionsSpec
     {
         [Fact]
         public void Where_ShouldReturnNoneWhenPredicateReturnsFalse()

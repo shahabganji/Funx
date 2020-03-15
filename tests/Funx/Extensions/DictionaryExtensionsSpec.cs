@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Funx.Tests.Extensions
 {
-    public class DictionaryExtensionsTests
+    public class DictionaryExtensionsSpec
     {
         [Fact]
         public void ShouldReturnAnOptionWhenValueExists()

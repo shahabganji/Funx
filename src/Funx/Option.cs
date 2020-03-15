@@ -1,39 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Funx.Extensions;
 using Funx.Option;
 using Unit = System.ValueTuple;
 
 
 namespace Funx
 {
-    public struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
+    public readonly struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
     {
         public static Option<T> None => Helpers.None;
         public static Option<T> Some(T value) => Helpers.Some(value);
 
-        private readonly bool _isSome;
         private readonly T _value;
 
-        public bool IsNone => !_isSome;
+        public bool IsSome { get; }
+        public bool IsNone => !IsSome;
 
         private Option(T value)
         {
             _value = value;
-            _isSome = true;
+            IsSome = true;
         }
 
         public static implicit operator Option<T>(T value)
             => value == null ? Helpers.None : Some(value);
-        
+
         public static implicit operator Option<T>(None _) => new Option<T>();
         public static implicit operator Option<T>(Some<T> some) => new Option<T>(some.Value);
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
-            => _isSome ? some(_value) : none();
+            => IsSome ? some(_value) : none();
+
         public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, Task<TR>> someAsync)
-            => _isSome ? someAsync(_value) : noneAsync();
+            => IsSome ? someAsync(_value) : noneAsync();
+
         public Task<TR> MatchAsync<TR>(Func<TR> none, Func<T, Task<TR>> someAsync)
         {
             Task<TR> AdapterNoneAsync() => Task.FromResult(none());
@@ -48,35 +49,57 @@ namespace Funx
             return this.MatchAsync(noneAsync, AdapterSomeAsync);
         }
 
-        public Unit Match(Action none, Action<T> some)
-            => this.Match(none.ToFunc(), some.ToFunc());
 
-        public Unit IfNone(Action none)
+        public Option<T> WhenNone(Action none)
         {
             if (this.IsNone) none();
-            return new Unit();
+            return this;
         }
-        public Task IfNoneAsync(Func<Task> noneAsync) => this.IsNone ? noneAsync() : Task.CompletedTask;
-        public Unit IfSome(Action<T> some)
+
+        public async Task<Option<T>> WhenNoneAsync(Func<Task> noneAsync)
         {
-            if (this._isSome) some(this._value);
-            return new Unit();
+            if (this.IsNone)
+                await noneAsync().ConfigureAwait(false);
+
+            return this;
         }
-        public Task IfSomeAsync(Func<T, Task> someAsync) => this._isSome ? someAsync(this._value) : Task.CompletedTask;
+
+        public Option<T> WhenSome(Action<T> some)
+        {
+            if (this.IsSome) some(this._value);
+            return this;
+        }
+
+        public async Task<Option<T>> WhenSomeAsync(Func<T, Task> someAsync)
+        {
+            if (this.IsSome)
+                await someAsync(this._value).ConfigureAwait(false);
+
+            return this;
+        }
+
+        public Either<L, T> ToEither<L>(Func<L> leftFactory)
+            => this.Match<Either<L, T>>(() => leftFactory(), v => v);
 
 
         public IEnumerable<T> AsEnumerable()
         {
-            if (this._isSome)
+            if (this.IsSome)
                 yield return this._value;
         }
 
-        #region Equality methods:
+        public T Unwrap(T defaultValue = default) => this.IsNone ? defaultValue : this._value;
+        public T Unwrap(Func<T> defaultValueFunc) => this.IsNone ? defaultValueFunc() : this._value;
+
+        public Task<T> UnwrapAsync(Func<Task<T>> defaultValueFuncAsync)
+            => this.IsNone
+                ? defaultValueFuncAsync()
+                : Task.FromResult(this._value);
 
         public bool Equals(None other) => IsNone;
 
         public bool Equals(Option<T> other)
-            => _isSome == other._isSome && (IsNone || this._value.Equals(other._value));
+            => IsSome == other.IsSome && (IsNone || this._value.Equals(other._value));
 
         public override bool Equals(object obj)
         {
@@ -87,11 +110,9 @@ namespace Funx
         {
             unchecked
             {
-                return (_isSome.GetHashCode() * 397) ^ EqualityComparer<T>.Default.GetHashCode(_value);
+                return (IsSome.GetHashCode() * 397) ^ EqualityComparer<T>.Default.GetHashCode(_value);
             }
         }
-
-        #endregion
 
         #region Operators:
 
@@ -116,6 +137,6 @@ namespace Funx
         #endregion
 
         public override string ToString()
-            => this._isSome ? $"Some({_value})" : "None";
+            => this.IsSome ? $"Some({_value})" : "None";
     }
 }
