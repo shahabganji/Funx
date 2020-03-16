@@ -6,7 +6,7 @@ using Unit = System.ValueTuple;
 
 namespace Funx
 {
-    public struct Exceptional<T>
+    public readonly struct Exceptional<T>
     {
         private readonly T _value;
         private readonly Exception _exception;

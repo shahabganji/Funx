@@ -4,7 +4,7 @@ using Funx.Extensions;
 
 namespace Funx
 {
-    public class Result<T>
+    public readonly struct Result<T>
     {
         public bool Succeeded => this.Errors == null;
         public bool Failed => this.Errors != null;
