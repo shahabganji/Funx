@@ -611,5 +611,27 @@ namespace Funx.Tests
 
         }
 
+        [Fact]
+        public void ToExceptional_should_return_a_Failed_Exceptional_when_None()
+        {
+            Option<int> option = Helpers.None;
+
+            var exceptional = option.ToExceptional(new InvalidOperationException("invalid"));
+
+            exceptional.IsException.Should().BeTrue();
+            exceptional.OnException(ex=>ex.Message.Should().Be("invalid"));
+        }
+        
+        [Fact]
+        public void ToExceptional_should_return_a_Successful_Exceptional_when_success()
+        {
+            Option<int> option = 11;
+
+            var exceptional = option.ToExceptional(new InvalidOperationException("invalid"));
+
+            exceptional.IsSuccess.Should().BeTrue();
+            exceptional.OnSuccess(v => v.Should().Be(11));
+        }
+
     }
 }
