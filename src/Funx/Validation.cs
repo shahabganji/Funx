@@ -13,8 +13,8 @@ namespace Funx
         public static Validation<T> Valid(T data) => Helpers.Valid(data);
         public static Validation<T> Invalid(params Error[] errors) => Helpers.Invalid<T>(errors);
         
-        public T Data { get; }
-        public IEnumerable<Error> Errors { get;}
+        private T Data { get; }
+        private IEnumerable<Error> Errors { get;}
         public bool IsValid => !this.Errors.SafeAny();
 
         private Validation(T data)
