@@ -11,8 +11,7 @@ namespace Funx
     {
 
         public static Validation<T> Valid(T data) => Helpers.Valid(data);
-        public static Validation<T> Invalid(params Error[] errors) => Helpers.Invalid<T>(errors);
-        
+
         private T Data { get; }
         private IEnumerable<Error> Errors { get;}
         public bool IsValid => !this.Errors.SafeAny();
@@ -26,18 +25,16 @@ namespace Funx
         private Validation(params Error[] errors)
         {
             this.Data = default;
-            Errors = errors;
+            this.Errors = errors ?? throw new ArgumentNullException(nameof(errors));
         }
 
         public static implicit operator Validation<T>(T data) => Valid(data);
-        public static implicit operator Validation<T>(Error error) => Invalid(error);
-        public static implicit operator Validation<T>(Error[] errors) => Invalid(errors);
-        
         public static implicit operator Validation<T>( Valid<T> valid ) => new Validation<T>(valid.Data);
-        public static implicit operator Validation<T>( Invalid invalid ) => new Validation<T>(invalid.Errors.ToArray());
+        
+        public static implicit operator Validation<T>(Error error) => new Validation<T>(error);
+        public static implicit operator Validation<T>(Error[] errors) => new Validation<T>(errors);
 
-        
-        
+
 
         public void OnValid(Action<T> onValid)
         {

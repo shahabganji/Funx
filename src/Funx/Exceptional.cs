@@ -18,7 +18,7 @@ namespace Funx
 
         private Exceptional(Exception exception)
         {
-            _exception = exception;
+            _exception = exception ?? throw new ArgumentNullException(nameof(exception));
             _value = default;
         }
 
@@ -28,7 +28,7 @@ namespace Funx
             _value = data;
         }
 
-        public static implicit operator Exceptional<T>(T data) => new Exceptional<T>(data);
+        public static implicit operator Exceptional<T>(T data) => Success(data);
 
         public static implicit operator Exceptional<T>(Exception ex) => new Exceptional<T>(ex);
         public static implicit operator Exceptional<T>(Success<T> data) => new Exceptional<T>(data.Value);

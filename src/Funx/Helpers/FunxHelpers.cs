@@ -17,13 +17,11 @@ namespace Funx
         public static Left<L> Left<L>(L l) => new Left<L>(l);
         public static Right<R> Right<R>(R r) => new Right<R>(r);
 
-        
+        // Factory method for Exceptional
         public static Exceptional<T> Success<T>(T data) => new Success<T>(data);
 
-        
+        // Factory method for Validation
         public static Validation<T> Valid<T>( T data ) => new Valid<T>(data);
-        
-        public static Validation<T> Invalid<T>( params Error[] errors) => new Invalid(errors);
         
     }
 }
