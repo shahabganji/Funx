@@ -51,5 +51,27 @@ namespace Funx.Tests
             result.Should().Be("error");
 
         }
+
+        [Fact]
+        public void Validation_should_be_able_to_cast_to_option_when_valid()
+        {
+            var validation = Helpers.Valid("test");
+
+            var option = (Option<string>) validation;
+
+            option.IsSome.Should().BeTrue();
+            option.WhenSome(x=> x.Should().Be("test"));
+        }
+        
+        [Fact]
+        public void Validation_should_be_able_to_cast_to_Non_when_Invalid()
+        {
+            var validation = (Validation<string>)new Error("error");
+
+            var option = (Option<string>) validation;
+
+            option.IsNone.Should().BeTrue();
+        }
+        
     }
 }

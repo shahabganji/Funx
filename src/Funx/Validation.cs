@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Funx.Extensions;
 using Funx.Validation;
@@ -33,8 +34,8 @@ namespace Funx
         
         public static implicit operator Validation<T>(Error error) => new Validation<T>(error);
         public static implicit operator Validation<T>(Error[] errors) => new Validation<T>(errors);
-
-
+        public static explicit operator Option<T>(Validation<T> validation)
+            => validation.ToOption();
 
         public void OnValid(Action<T> onValid)
         {
@@ -56,5 +57,10 @@ namespace Funx
             => this.IsValid
                 ? onValid(this.Data)
                 : onFailure(this.Errors.ToArray());
+
+        public Option<T> ToOption()
+            => this.IsValid
+                ? this.Data
+                : Option<T>.None;
     }
 }
