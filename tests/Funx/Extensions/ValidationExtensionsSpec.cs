@@ -11,7 +11,7 @@ namespace Funx.Tests.Extensions
     {
 
         [Fact]
-        public void Map_should_apply_the_map_func_on_the_right_side_of_an_either()
+        public void Map_should_apply_the_map_func_on_the_valid_side_of_a_validation()
         {
             Validation<int> validation = 1;
 
@@ -24,7 +24,7 @@ namespace Funx.Tests.Extensions
         }
         
         [Fact]
-        public void Map_should_not_apply_the_map_func_on_the_right_side_if_an_either_is_left_and_should_return_left()
+        public void Map_should_not_apply_the_map_func_on_the_valid_side_if_aa_validation_is_invalid_and_should_return_error()
         {
             Validation<int> error= new Error("error");
             
@@ -40,7 +40,7 @@ namespace Funx.Tests.Extensions
         }
         
         [Fact]
-        public void ForEach_should_only_call_when_either_is_right()
+        public void ForEach_should_only_call_when_validation_is_valid()
         {
             Validation<int> valid = 1;
             Validation<int> invalid = new Error("left");
@@ -54,7 +54,7 @@ namespace Funx.Tests.Extensions
         }
 
         [Fact]
-        public void Bind_from_either_to_either()
+        public void Bind_from_validation_to_validation()
         {
             Validation<int> First() => 1;
             Validation<string> Second(int value) => Valid( value.ToString());
@@ -67,7 +67,7 @@ namespace Funx.Tests.Extensions
         }
         
         [Fact]
-        public void Bind_from_either_to_either_returns_left_when_first_either_is_left()
+        public void Bind_from_validation_to_validation_returns_invalid_when_first_validation_is_invalid()
         {
             Validation<int> First() => new Error("error");
             Validation<string> Second(int value) => Valid( value.ToString());
@@ -84,7 +84,7 @@ namespace Funx.Tests.Extensions
         
         
         [Fact]
-        public void Bind_from_either_to_option()
+        public void Bind_from_validation_to_option()
         {
             Validation<int> FromInt() => 1;
             Option<string> FromString(int i) => i.ToString();
