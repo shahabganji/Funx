@@ -56,30 +56,30 @@ namespace Funx
             return this;
         }
 
-        public async Task<Option<T>> WhenNoneAsync(Func<Task> noneAsync)
+        public async Task WhenNoneAsync(Func<Task> noneAsync)
         {
             if (this.IsNone)
                 await noneAsync().ConfigureAwait(false);
-
-            return this;
         }
 
-        public Option<T> WhenSome(Action<T> some)
+        public void WhenSome(Action<T> some)
         {
             if (this.IsSome) some(this._value);
-            return this;
         }
 
-        public async Task<Option<T>> WhenSomeAsync(Func<T, Task> someAsync)
+        public async Task WhenSomeAsync(Func<T, Task> someAsync)
         {
             if (this.IsSome)
                 await someAsync(this._value).ConfigureAwait(false);
-
-            return this;
         }
 
         public Either<L, T> ToEither<L>(Func<L> leftFactory)
             => this.Match<Either<L, T>>(() => leftFactory(), v => v);
+
+        public Exceptional<T> ToExceptional(Exception exception) 
+            => this.Match<Exceptional<T>>(
+                () => exception,
+                v => v);
 
 
         public IEnumerable<T> AsEnumerable()

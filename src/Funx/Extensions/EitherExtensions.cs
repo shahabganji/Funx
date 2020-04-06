@@ -6,7 +6,6 @@ using Unit = System.ValueTuple;
 
 namespace Funx.Extensions
 {
-    // todo: add unit tests for these extension methods
     public static class EitherExtensions
     {
         public static Either<L, RR> Map<L, R, RR>(this Either<L, R> either, Func<R, RR> f)
