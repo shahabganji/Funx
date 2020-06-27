@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Funx.Exceptional;
 using Xunit;
 using static Funx.Helpers;
 

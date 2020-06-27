@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Funx.Extensions;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Funx.Tests.Extensions
 {
