@@ -17,11 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{AA0B4541-7663-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funx.Tests", "tests\Funx\Funx.Tests.csproj", "{FD0CE2AE-943A-4CD3-92ED-84B7C28AE307}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{EC6A353A-B017-42E0-9CC5-840BADDA2D4F}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funx.Console", "tests\Funx.Console\Funx.Console.csproj", "{7D03EEBD-EBC5-4724-A920-A2426C50E923}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funx.Test.Api", "tests\Funx.Test.Api\Funx.Test.Api.csproj", "{948490E6-4E9B-4336-9528-AA0F1C433BE8}"
