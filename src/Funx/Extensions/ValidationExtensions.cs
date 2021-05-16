@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Funx.Validation;
 using static Funx.Helpers;
 
 namespace Funx.Extensions
@@ -28,10 +25,5 @@ namespace Funx.Extensions
             => validation.Match(
                 _ => None, 
                 f);
-        
-        public static Result<T> ToResult<T>(this Validation<T> validation)
-            => validation.Match<Result<T>>(
-                error => error,
-                data => data);
     }
 }

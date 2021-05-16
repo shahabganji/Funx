@@ -1,15 +1,41 @@
-﻿using static Funx.Helpers;
+﻿using System;
+using System.ComponentModel.Design;
+using System.Globalization;
+using Funx.Extensions;
+using static System.Console;
+using Name = System.String;
+using Greeting = System.String;
+using PersonalizedGreeting = System.String;
 
 
 namespace Funx.Console {
     
     internal static class Program 
     {
+        
+
         private static void Main(string[] args)
         {
-            var either = Right<string>("right");
-            var either2 = Either<string, int>.Left("left");
+            Func<Greeting, Name, PersonalizedGreeting> greet = (gr, name) => $"{gr}, {name}";
+            Func<Greeting, Func<Name, PersonalizedGreeting>> greetWith = gr => name => $"{gr}, {name}";
+
+            Name[] names = {"Shahab", "AliAbbas"};
+
+            names
+                .Map(g => greet("Hello", g))
+                .ForEach((string s) =>  WriteLine(s));
+
+            var greetFormally = greet.Apply("Good evening, ");
+            names
+                .Map(greetFormally)
+                .ForEach(Print);
+
+            var greetWith2 = greet.Curry();
+            var greetInformally = greetWith2("Hello");
+            names.Map(greetInformally).ForEach(Print);
 
         }
+
+        static void Print(string s) => WriteLine(s);
     }
 }
