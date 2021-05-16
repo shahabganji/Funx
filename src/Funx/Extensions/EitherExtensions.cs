@@ -34,13 +34,13 @@ namespace Funx.Extensions
                 _ => None, 
                 f);
         
-        public static Result<T> ToResult<T>(this Either<Error, T> either)
-            => either.Match<Result<T>>(
+        public static Validation<T> ToValidation<T>(this Either<Error, T> either)
+            => either.Match<Validation<T>>(
                 error => error,
                 data => data);
         
-        public static Result<T> ToResult<T>(this Either<IEnumerable<Error>, T> either)
-            => either.Match<Result<T>>(
+        public static Validation<T> ToValidation<T>(this Either<IEnumerable<Error>, T> either)
+            => either.Match<Validation<T>>(
                 errors => errors.ToArray(),
                 data => data);
         
