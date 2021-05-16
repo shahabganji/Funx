@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Funx.Option;
 using Unit = System.ValueTuple;
 
-
 namespace Funx
 {
     public readonly struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
@@ -13,6 +12,11 @@ namespace Funx
         public static Option<T> Some(T value) => Helpers.Some(value);
 
         private readonly T _value;
+        public T UnwrappedValue => this.IsNone
+            ? throw new InvalidOperationException(
+                $"{nameof(Unwrap)} without providing default value can only be called on " +
+                $"Options with a not `None` values")
+            : this._value;
 
         public bool IsSome { get; }
         public bool IsNone => !IsSome;
@@ -26,8 +30,8 @@ namespace Funx
         public static implicit operator Option<T>(T value)
             => value == null ? Helpers.None : Some(value);
 
-        public static implicit operator Option<T>(None _) => new Option<T>();
-        public static implicit operator Option<T>(Some<T> some) => new Option<T>(some.Value);
+        public static implicit operator Option<T>(None _) => new();
+        public static implicit operator Option<T>(Some<T> some) => new(some.Value);
 
         public TR Match<TR>(Func<TR> none, Func<T, TR> some)
             => IsSome ? some(_value) : none();
@@ -76,7 +80,7 @@ namespace Funx
         public Either<L, T> ToEither<L>(Func<L> leftFactory)
             => this.Match<Either<L, T>>(() => leftFactory(), v => v);
 
-        public Exceptional<T> ToExceptional(Exception exception) 
+        public Exceptional<T> ToExceptional(Exception exception)
             => this.Match<Exceptional<T>>(
                 () => exception,
                 v => v);

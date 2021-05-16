@@ -25,7 +25,7 @@ namespace Funx.Extensions
                 exception => None,
                 f);
 
-        public static  Result<T> ToResult<T>(this Exceptional<T> exceptional)
-            => exceptional.Match<Result<T>>(exp => new Error(exp.Message), data => data);
+        public static  Validation<T> ToValidation<T>(this Exceptional<T> exceptional)
+            => exceptional.Match<Validation<T>>(exp => new Error(exp.Message), data => data);
     }
 }

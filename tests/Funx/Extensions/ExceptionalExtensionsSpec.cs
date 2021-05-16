@@ -10,26 +10,26 @@ namespace Funx.Tests.Extensions
     public class ExceptionalExtensionsSpec
     {
         [Fact]
-        public void ToResult_should_change_Exceptional_to_a_Failed_Result()
+        public void ToValidation_should_change_Exceptional_to_a_Failed_Validation()
         {
             Exceptional<int> exceptional = new InvalidOperationException("invalid");
 
-            var result = exceptional.ToResult();
+            var result = exceptional.ToValidation();
 
-            result.Failed.Should().BeTrue();
+            result.IsValid.Should().BeFalse();
             result.Errors.Should().NotBeEmpty();
             result.Errors.First().Message.Should().Be("invalid");
 
         }
         
         [Fact]
-        public void ToResult_should_change_Exceptional_to_a_Successful_Result()
+        public void ToResult_should_change_Exceptional_to_a_Successful_Validation()
         {
             Exceptional<int> exceptional = 1;
 
-            var result = exceptional.ToResult();
+            var result = exceptional.ToValidation();
 
-            result.Succeeded.Should().BeTrue();
+            result.IsValid.Should().BeTrue();
             result.Errors.Should().BeNullOrEmpty();
             result.Data.Should().BeOfType(typeof(int));
             result.Data.Should().Be(1);

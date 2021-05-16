@@ -29,13 +29,11 @@ namespace Funx
         }
 
         public static implicit operator Exceptional<T>(T data) => Success(data);
-
-        public static implicit operator Exceptional<T>(Exception ex) => new Exceptional<T>(ex);
-        public static implicit operator Exceptional<T>(Success<T> data) => new Exceptional<T>(data.Value);
+        public static implicit operator Exceptional<T>(Exception ex) => new(ex);
+        public static implicit operator Exceptional<T>(Success<T> data) => new(data.Value);
 
         public static explicit operator Option<T>(Exceptional<T> exceptional)
             => exceptional.ToOption();
-
 
         public R Match<R>(Func<Exception, R> onException, Func<T, R> onSuccess)
             => this.IsException
@@ -81,5 +79,7 @@ namespace Funx
             => this.Match<Option<T>>(
                 _ => None,
                 data => data);
+        public Either<L, T> ToEither<L>(Func<Exception, L> leftFactory)
+            => this.Match<Either<L, T>>(l => leftFactory(l), data => data);
     }
 }
