@@ -42,30 +42,45 @@ test_script:
 #  - ps: ls ./tests/Funx/bin/Debug/netcoreapp3.1
   - ps: coverlet .\tests\Funx\bin\Debug\net8.0\Funx.Tests.dll --target "dotnet" --targetargs "test --no-build" --format "opencover" --output "./funx_coverage.xml"
   - codecov -f "funx_coverage.xml"
+    
+after_test:
+  - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ./publish
+  - ps: ls ./publish
 
-for:
--
-  branches:
-    only:
-      - /\d+\.\d+\.\d+/
+artifacts:
+  - path: '**\*.nupkg'
 
-  configuration: Release
-
-  test_script:
-    - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
-    - ps: coverlet .\tests\Funx\bin\Release\net8.0\Funx.Tests.dll --target "dotnet" --targetargs "test --no-build" --format "opencover" --output "./funx_coverage.xml"
-    - codecov -f "funx_coverage.xml"
-
-  after_test:
-    - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ./publish
-    - ps: ls ./publish
-
-  artifacts:
-    - path: '**\*.nupkg'
-
-  deploy:
+deploy:
+  -
     provider: NuGet
     api_key:
       secure: u+tz8/wLjX6sQ/KNA4jNZiihA5nXhWQx8JjUDt0kLlg8VBJHEzToNL3A9miswDAf
     skip_symbols: false
     artifact: /.*\.nupkg/
+
+#for:
+#-
+#  branches:
+#    only:
+#      - /\d+\.\d+\.\d+/
+#
+#  configuration: Release
+#
+#  test_script:
+#    - ps: dotnet test tests/Funx/Funx.Tests.csproj --verbosity normal
+#    - ps: coverlet .\tests\Funx\bin\Release\net8.0\Funx.Tests.dll --target "dotnet" --targetargs "test --no-build" --format "opencover" --output "./funx_coverage.xml"
+#    - codecov -f "funx_coverage.xml"
+#
+#  after_test:
+#    - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ./publish
+#    - ps: ls ./publish
+#
+#  artifacts:
+#    - path: '**\*.nupkg'
+#
+#  deploy:
+#    provider: NuGet
+#    api_key:
+#      secure: u+tz8/wLjX6sQ/KNA4jNZiihA5nXhWQx8JjUDt0kLlg8VBJHEzToNL3A9miswDAf
+#    skip_symbols: false
+#    artifact: /.*\.nupkg/
