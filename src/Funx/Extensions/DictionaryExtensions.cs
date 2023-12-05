@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using static Funx.Helpers;
+using static Funx.Factories;
 
 
 namespace Funx.Extensions

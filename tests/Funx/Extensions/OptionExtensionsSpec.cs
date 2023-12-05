@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Funx.Extensions;
 using Xunit;
-using static Funx.Helpers;
+using static Funx.Factories;
 
 namespace Funx.Tests.Extensions
 {
@@ -13,25 +13,27 @@ namespace Funx.Tests.Extensions
         [Fact]
         public void Where_ShouldReturnNoneWhenPredicateReturnsFalse()
         {
-            bool IsOdd(int v) => v % 2 != 0;
-
             var evenNumber = Some(2);
 
             var actual = evenNumber.Where(IsOdd);
 
-            Assert.Equal(actual, Helpers.None);
+            Assert.Equal(actual, None);
+            return;
+
+            bool IsOdd(int v) => v % 2 != 0;
         }
 
         [Fact]
         public void Where_ShouldReturnSomeWhenPredicateReturnsFalse()
         {
-            bool IsOdd(int v) => v % 2 == 0;
-
             var evenNumber = Some(2);
 
             var actual = evenNumber.Where(IsOdd);
 
             Assert.Equal(actual, evenNumber);
+            return;
+
+            bool IsOdd(int v) => v % 2 == 0;
         }
 
         [Fact]
@@ -59,12 +61,13 @@ namespace Funx.Tests.Extensions
         {
             var lower = Some("test");
 
-            Task<string> ToUpperAsync(string value) => Task.FromResult(value.ToUpper());
-
             var upper = await  lower.MapAsync(ToUpperAsync).ConfigureAwait(false);
 
             Assert.True(upper != None);
             upper.ForEach(value => Assert.Equal(value, $"TEST"));
+            return;
+
+            Task<string> ToUpperAsync(string value) => Task.FromResult(value.ToUpper());
         }
 
         [Fact]
@@ -72,11 +75,12 @@ namespace Funx.Tests.Extensions
         {
             Option<string> lower = None;
 
-            Task<string> ToUpperAsync(string value) => Task.FromResult(value.ToUpper());
-
             var upper = await  lower.MapAsync(ToUpperAsync).ConfigureAwait(false);
 
             Assert.True(upper == None);
+            return;
+
+            Task<string> ToUpperAsync(string value) => Task.FromResult(value.ToUpper());
         }
 
         [Fact]
@@ -84,22 +88,24 @@ namespace Funx.Tests.Extensions
         {
             Option<string> lower = Some("value");
 
-            Task<string> ToUpperAsync(string value) => throw new InvalidOperationException("invalid");
-
             await Assert.ThrowsAsync<InvalidOperationException>(() => lower.MapAsync(ToUpperAsync)).ConfigureAwait(false);
+            return;
+
+            Task<string> ToUpperAsync(string value) => throw new InvalidOperationException("invalid");
         }
 
         [Fact]
         public void Bind_Should_Bind_Between_IEnumerable_Of_Option()
         {
             var name = Some(new[]{"John" , "Jane"});
-            
-            IEnumerable<char> ToCharacters(string[] names) => names.SelectMany(n => n.ToCharArray());
 
             var result = name.Bind(ToCharacters);
 
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<char>>(result);
+            return;
+
+            IEnumerable<char> ToCharacters(string[] names) => names.SelectMany(n => n.ToCharArray());
         }
 
         [Fact]
@@ -107,13 +113,14 @@ namespace Funx.Tests.Extensions
         {
             var lower = Some("test");
 
-            Option<string> ToUpper(string value) => value.ToUpper();
-
             var upper = lower.Bind(ToUpper);
 
             Assert.IsAssignableFrom<Option<string>>(upper);
 
             upper.ForEach((value) => { Assert.Equal(value, $"TEST"); });
+            return;
+
+            Option<string> ToUpper(string value) => value.ToUpper();
         }
 
         [Fact]
@@ -121,21 +128,19 @@ namespace Funx.Tests.Extensions
         {
             Option<string> lower = None;
 
-            Option<bool> ToUpper(string value) => false;
-
             var upper = lower.Bind(ToUpper);
 
             Assert.IsAssignableFrom<Option<bool>>(upper);
             Assert.True(upper == None);
-            
+            return;
+
+            Option<bool> ToUpper(string value) => false;
         }
 
         [Fact]
         public async Task BindAsync_ShouldReturnTheValueOfTheProvidedFunctionWithNoWrapper()
         {
             var lower = Some("test");
-
-            Task<Option<string>> ToUpperAsync(string value) => Task.FromResult(Some(value.ToUpper()));
 
             var upperTask = lower.BindAsync(ToUpperAsync);
 
@@ -146,14 +151,15 @@ namespace Funx.Tests.Extensions
             Assert.IsAssignableFrom<Option<string>>(upper);
 
             upper.ForEach((value) => { Assert.Equal(value, $"TEST"); });
+            return;
+
+            Task<Option<string>> ToUpperAsync(string value) => Task.FromResult(Some(value.ToUpper()));
         }
 
         [Fact]
         public async Task BindAsyncShouldReturnNoneWhenTheMainOptionIsNoneAndNotCallSomeFunc()
         {
             Option<string> lower = None;
-
-            Task<Option<bool>> ToUpperAsync(string value) => Task.FromResult(Some(false));
 
             var upperTask = lower.BindAsync(ToUpperAsync);
 
@@ -163,7 +169,9 @@ namespace Funx.Tests.Extensions
 
             Assert.IsAssignableFrom<Option<bool>>(upper);
             Assert.True(upper == None);
-            
+            return;
+
+            Task<Option<bool>> ToUpperAsync(string value) => Task.FromResult(Some(false));
         }
 
     }

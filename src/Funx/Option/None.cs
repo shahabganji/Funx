@@ -2,7 +2,7 @@ namespace Funx.Option
 {
     public struct None
     {
-        internal static readonly None Default = new None();
+        internal static readonly None Default = new();
 
         public override string ToString()
         {

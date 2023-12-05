@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Funx.Either;
-using static Funx.Helpers;
+using static Funx.Factories;
 using Unit = System.ValueTuple;
 
 namespace Funx
 {
     public readonly struct Either<L, R>
     {
-        public static Either<L, R> Left(L l) => Helpers.Left(l);
-        public static Either<L, R> Right(R r) => Helpers.Right(r);
+        public static Either<L, R> Left(L l) => Factories.Left(l);
+        public static Either<L, R> Right(R r) => Factories.Right(r);
 
         private readonly L _left;
         private readonly R _right;
@@ -34,11 +34,11 @@ namespace Funx
         }
 
 
-        public static implicit operator Either<L, R>(L left) => new Either<L, R>(left);
-        public static implicit operator Either<L, R>(R right) => new Either<L, R>(right);
+        public static implicit operator Either<L, R>(L left) => new(left);
+        public static implicit operator Either<L, R>(R right) => new(right);
 
-        public static implicit operator Either<L, R>(Left<L> left) => new Either<L, R>(left.Value);
-        public static implicit operator Either<L, R>(Right<R> right) => new Either<L, R>(right.Value);
+        public static implicit operator Either<L, R>(Left<L> left) => new(left.Value);
+        public static implicit operator Either<L, R>(Right<R> right) => new(right.Value);
 
         public static explicit operator Option<R>(Either<L, R> either) => either.ToOption();
 
@@ -50,16 +50,16 @@ namespace Funx
 
         public Task<TR> MatchAsync<TR>(Func<L, TR> left, Func<R, Task<TR>> rightAsync)
         {
-            Task<TR> AdapterLeftAsync(L l) => Task.FromResult(left(l));
-
             return this.MatchAsync(AdapterLeftAsync, rightAsync);
+
+            Task<TR> AdapterLeftAsync(L l) => Task.FromResult(left(l));
         }
         
         public Task<TR> MatchAsync<TR>(Func<L, Task<TR>> leftAsync, Func<R, TR> right)
         {
-            Task<TR> AdapterRightAsync(R r) => Task.FromResult(right(r));
-
             return this.MatchAsync(leftAsync, AdapterRightAsync);
+
+            Task<TR> AdapterRightAsync(R r) => Task.FromResult(right(r));
         }
 
 

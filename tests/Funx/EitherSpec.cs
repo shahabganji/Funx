@@ -38,6 +38,13 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = either.Match(LeftFunc, RightFunc);
+
+            Assert.Equal("1", result);
+            Assert.True(rightCalled);
+            Assert.False(leftCalled);
+            return;
+
             string RightFunc(int i)
             {
                 rightCalled = true;
@@ -49,12 +56,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return s;
             }
-
-            var result = either.Match(LeftFunc, RightFunc);
-
-            Assert.Equal("1", result);
-            Assert.True(rightCalled);
-            Assert.False(leftCalled);
         }
 
         [Fact]
@@ -65,6 +66,13 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = either.Match(LeftFunc, RightFunc);
+
+            Assert.Equal("invalid", result);
+            Assert.False(rightCalled);
+            Assert.True(leftCalled);
+            return;
+
             string RightFunc(int i)
             {
                 rightCalled = true;
@@ -76,12 +84,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return s;
             }
-
-            var result = either.Match(LeftFunc, RightFunc);
-
-            Assert.Equal("invalid", result);
-            Assert.False(rightCalled);
-            Assert.True(leftCalled);
         }
 
         [Fact]
@@ -92,6 +94,14 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = await either.MatchAsync(LeftFuncAsync, RightFuncAsync)
+                .ConfigureAwait(false);
+
+            Assert.Equal("1", result);
+            Assert.True(rightCalled);
+            Assert.False(leftCalled);
+            return;
+
             Task<string> RightFuncAsync(int i)
             {
                 rightCalled = true;
@@ -103,13 +113,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return Task.FromResult(s);
             }
-
-            var result = await either.MatchAsync(LeftFuncAsync, RightFuncAsync)
-                .ConfigureAwait(false);
-
-            Assert.Equal("1", result);
-            Assert.True(rightCalled);
-            Assert.False(leftCalled);
         }
 
         [Fact]
@@ -120,6 +123,14 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = await either.MatchAsync(LeftFuncAsync, RightFuncAsync)
+                .ConfigureAwait(false);
+
+            Assert.Equal("invalid", result);
+            Assert.False(rightCalled);
+            Assert.True(leftCalled);
+            return;
+
             Task<string> RightFuncAsync(int i)
             {
                 rightCalled = true;
@@ -131,13 +142,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return Task.FromResult(s);
             }
-
-            var result = await either.MatchAsync(LeftFuncAsync, RightFuncAsync)
-                .ConfigureAwait(false);
-
-            Assert.Equal("invalid", result);
-            Assert.False(rightCalled);
-            Assert.True(leftCalled);
         }
 
         [Fact]
@@ -148,6 +152,14 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = await either.MatchAsync(LeftFunc, RightFuncAsync)
+                .ConfigureAwait(false);
+
+            Assert.Equal("1", result);
+            Assert.True(rightCalled);
+            Assert.False(leftCalled);
+            return;
+
             Task<string> RightFuncAsync(int i)
             {
                 rightCalled = true;
@@ -159,13 +171,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return s;
             }
-
-            var result = await either.MatchAsync(LeftFunc, RightFuncAsync)
-                .ConfigureAwait(false);
-
-            Assert.Equal("1", result);
-            Assert.True(rightCalled);
-            Assert.False(leftCalled);
         }
 
         [Fact]
@@ -176,6 +181,14 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = await either.MatchAsync(LeftFunc, RightFuncAsync)
+                .ConfigureAwait(false);
+
+            Assert.Equal("invalid", result);
+            Assert.False(rightCalled);
+            Assert.True(leftCalled);
+            return;
+
             Task<string> RightFuncAsync(int i)
             {
                 rightCalled = true;
@@ -187,13 +200,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return s;
             }
-
-            var result = await either.MatchAsync(LeftFunc, RightFuncAsync)
-                .ConfigureAwait(false);
-
-            Assert.Equal("invalid", result);
-            Assert.False(rightCalled);
-            Assert.True(leftCalled);
         }
 
         [Fact]
@@ -204,6 +210,14 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = await either.MatchAsync(LeftFuncAsync, RightFunc)
+                .ConfigureAwait(false);
+
+            Assert.Equal("1", result);
+            Assert.True(rightCalled);
+            Assert.False(leftCalled);
+            return;
+
             string RightFunc(int i)
             {
                 rightCalled = true;
@@ -215,13 +229,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return Task.FromResult(s);
             }
-
-            var result = await either.MatchAsync(LeftFuncAsync, RightFunc)
-                .ConfigureAwait(false);
-
-            Assert.Equal("1", result);
-            Assert.True(rightCalled);
-            Assert.False(leftCalled);
         }
 
         [Fact]
@@ -232,6 +239,14 @@ namespace Funx.Tests
             var rightCalled = false;
             var leftCalled = false;
 
+            var result = await either.MatchAsync(LeftFuncAsync, RightFunc)
+                .ConfigureAwait(false);
+
+            Assert.Equal("invalid", result);
+            Assert.False(rightCalled);
+            Assert.True(leftCalled);
+            return;
+
             string RightFunc(int i)
             {
                 rightCalled = true;
@@ -243,13 +258,6 @@ namespace Funx.Tests
                 leftCalled = true;
                 return Task.FromResult(s);
             }
-
-            var result = await either.MatchAsync(LeftFuncAsync, RightFunc)
-                .ConfigureAwait(false);
-
-            Assert.Equal("invalid", result);
-            Assert.False(rightCalled);
-            Assert.True(leftCalled);
         }
 
 
@@ -275,7 +283,7 @@ namespace Funx.Tests
         [Fact]
         public void ToOption_should_convert_Either_of_R_to_Option_of_R()
         {
-            Either<bool, string> either = Helpers.Right("shahab");
+            Either<bool, string> either = Factories.Right("shahab");
 
             var option = either.ToOption();
 
@@ -289,7 +297,7 @@ namespace Funx.Tests
         [Fact]
         public void Either_should_cast_to_Option_of_R()
         {
-            Either<bool, string> either = Helpers.Right("shahab");
+            Either<bool, string> either = Factories.Right("shahab");
 
             var option = (Option<string>) either;
 

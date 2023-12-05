@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using static Funx.Helpers;
+using static Funx.Factories;
 
 
 namespace Funx.Extensions
@@ -13,10 +13,11 @@ namespace Funx.Extensions
         {
             var taskResult = await @this.ConfigureAwait(false);
 
-            Task<TR> AdapterNoneAsync() => Task.FromResult(none());
-            Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
-
             return await taskResult.MatchAsync(AdapterNoneAsync, AdapterSomeAsync).ConfigureAwait(false);
+
+            Task<TR> AdapterNoneAsync() => Task.FromResult(none());
+
+            Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
         }
 
         public static async Task<TR> MatchAsync<T, TR>(this Task<Option<T>> @this, Func<Task<TR>> noneAsync,
@@ -49,12 +50,12 @@ namespace Funx.Extensions
 
         public static Task<Option<TR>> MapAsync<T, TR>(this Task<Option<T>> @this, Func<T, Task<TR>> funcAsync)
         {
+            return @this.BindAsync(AdapterFuncAsync);
+
             async Task<Option<TR>> AdapterFuncAsync(T t)
             {
                 return Some(await funcAsync(t).ConfigureAwait(false));
             }
-
-            return @this.BindAsync(AdapterFuncAsync);
         }
 
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
@@ -66,11 +67,11 @@ namespace Funx.Extensions
         {
             var taskResult = await @this.ConfigureAwait(false);
 
+            return await @this.MatchAsync(NoneAsync, SomeAsync).ConfigureAwait(false);
+
             Task<Option<T>> NoneAsync() => Task.FromResult((Option<T>)None);
 
             Task<Option<T>> SomeAsync(T t) => predicate(t) ? Task.FromResult(Some(t)) : Task.FromResult((Option<T>)None);
-
-            return await @this.MatchAsync(NoneAsync, SomeAsync).ConfigureAwait(false);
         }
 
     }

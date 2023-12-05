@@ -44,7 +44,7 @@ I would rather to use it in a different way, since all native types can be impli
 
 ```csharp
 using Funx;
-using static Funx.Helpers;
+using static Funx.Factories;
 
 Option<string> none = None;
 Option<string> author = "Enrico";
@@ -87,7 +87,7 @@ To map Option<T> to another option use `Map`, and `Bind` functions, the `Map` ac
 
 ```csharp
 using Funx.Extensions;
-using static Funx.Helpers;
+using static Funx.Factories;
 
 var str = Some("value");
 
@@ -100,7 +100,7 @@ var upperCase = str.Map(ToUpper); // upperCase is an Option<string> too.
 ```csharp
 using Funx;
 using Funx.Extensions;
-using static Funx.Helpers;
+using static Funx.Factories;
 
 var str = Some("value");
 

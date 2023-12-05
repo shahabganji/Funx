@@ -14,14 +14,15 @@ namespace Funx.Tests.Extensions
         {
             var numbers = Enumerable.Range(0, 10).ToArray();
 
-            bool LessThanFive(int i) => i < 5;
-
             var selectResults = numbers.Select(LessThanFive).ToArray();
             var mapResult = numbers.Map(LessThanFive).ToArray();
 
             Assert.Equal(selectResults.Count(), mapResult.Count());
 
             selectResults.ForEach((item, index) => Assert.Equal(item, mapResult[index]));
+            return;
+
+            bool LessThanFive(int i) => i < 5;
         }
 
         [Fact]
@@ -29,9 +30,9 @@ namespace Funx.Tests.Extensions
         {
             IEnumerable<Subject> population = new List<Subject>()
             {
-                new Subject() {Age = Age.Of(20)},
-                new Subject() { },
-                new Subject() {Age = Age.Of(30)}
+                new() {Age = Age.Of(20)},
+                new() { },
+                new() {Age = Age.Of(30)}
             };
 
             var manyItems = population.SelectMany(p => p.Age.AsEnumerable()).ToArray();

@@ -1,4 +1,4 @@
-﻿using static Funx.Helpers;
+﻿using static Funx.Factories;
 
 namespace Funx.Tests.Mocks
 {

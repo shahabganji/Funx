@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Funx.Extensions;
 using Funx.Option;
 using Xunit;
 using FluentAssertions;
-using static Funx.Helpers;
+using static Funx.Factories;
 
 namespace Funx.Tests
 {
@@ -16,7 +15,7 @@ namespace Funx.Tests
         [Fact]
         public void NoneShouldBeAnOptionOfT()
         {
-            Option<bool> option = Helpers.None;
+            Option<bool> option = Factories.None;
 
             Assert.IsType<Option<bool>>(option);
         }
@@ -32,7 +31,12 @@ namespace Funx.Tests
         [Fact]
         public async Task WhenNoneMatchAsyncMethodShouldCallNoneFuncAsync()
         {
-            Option<string> noneOpt = Helpers.None;
+            Option<string> noneOpt = Factories.None;
+
+            var noneCalled = await noneOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync);
+
+            Assert.True(noneCalled);
+            return;
 
             Task<bool> NoneFuncAsync()
             {
@@ -43,18 +47,14 @@ namespace Funx.Tests
             {
                 return Task.FromResult(false);
             }
-
-            var noneCalled = await noneOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync).ConfigureAwait(false);
-
-            Assert.True(noneCalled);
         }
 
         [Fact]
         public void WhenNoneMatchMethodShouldCallNoneFunc()
         {
-            Option<string> noneOpt = Helpers.None;
+            Option<string> noneOpt = Factories.None;
 
-            var noneCalled = noneOpt.Match(() => true, v => false);
+            var noneCalled = noneOpt.Match(() => true, _ => false);
 
             Assert.True(noneCalled);
         }
@@ -64,6 +64,11 @@ namespace Funx.Tests
         {
             var someOpt = Some("fake");
 
+            var noneCalled = await someOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync);
+
+            Assert.True(noneCalled);
+            return;
+
             Task<bool> NoneFuncAsync()
             {
                 return Task.FromResult(false);
@@ -73,10 +78,6 @@ namespace Funx.Tests
             {
                 return Task.FromResult(true);
             }
-
-            var noneCalled = await someOpt.MatchAsync(NoneFuncAsync, SomeFuncAsync).ConfigureAwait(false);
-
-            Assert.True(noneCalled);
         }
 
         [Fact]
@@ -84,29 +85,29 @@ namespace Funx.Tests
         {
             var option = Some(11);
 
-            bool NoneFunc() => false;
-            Task<bool> SomeAsync(int value) => Task.FromResult(value == 11);
-
-            var hasCalledSome = await option.MatchAsync(NoneFunc, SomeAsync)
-                .ConfigureAwait(false);
+            var hasCalledSome = await option.MatchAsync(NoneFunc, SomeAsync);
 
             Assert.True(hasCalledSome);
+            return;
 
+            bool NoneFunc() => false;
+
+            Task<bool> SomeAsync(int value) => Task.FromResult(value == 11);
         }
 
         [Fact]
         public async Task WhenIsNoneThenCallNoneAndNotSomeAsync()
         {
-            var option = (Option<int>)Helpers.None;
+            var option = (Option<int>)Factories.None;
 
-            bool NoneFunc() => true;
-            Task<bool> SomeAsync(int value) => Task.FromResult(false);
-
-            var hasCalledNone = await option.MatchAsync(NoneFunc, SomeAsync)
-                .ConfigureAwait(false);
+            var hasCalledNone = await option.MatchAsync(NoneFunc, SomeAsync);
 
             Assert.True(hasCalledNone);
+            return;
 
+            bool NoneFunc() => true;
+
+            Task<bool> SomeAsync(int value) => Task.FromResult(false);
         }
 
         [Fact]
@@ -114,31 +115,29 @@ namespace Funx.Tests
         {
             var option = Some(11);
 
-            Task<bool> NoneFuncAsync() => Task.FromResult(false);
-            bool SomeFunc(int value) => value == 11;
-
-            var xxx = SynchronizationContext.Current;
-
-            var hasCalledSome = await option.MatchAsync(NoneFuncAsync, SomeFunc)
-                .ConfigureAwait(false);
+            var hasCalledSome = await option.MatchAsync(NoneFuncAsync, SomeFunc);
 
             Assert.True(hasCalledSome);
+            return;
 
+            Task<bool> NoneFuncAsync() => Task.FromResult(false);
+
+            bool SomeFunc(int value) => value == 11;
         }
 
         [Fact]
         public async Task WhenIsNoneThenCallNoneAsyncAndNotSome()
         {
-            var option = (Option<int>)Helpers.None;
+            var option = (Option<int>)Factories.None;
 
-            Task<bool> NoneFuncAsync() => Task.FromResult(true);
-            bool SomeFunc(int value) => false;
-
-            var hasCalledNone = await option.MatchAsync(NoneFuncAsync, SomeFunc)
-                .ConfigureAwait(false);
+            var hasCalledNone = await option.MatchAsync(NoneFuncAsync, SomeFunc);
 
             Assert.True(hasCalledNone);
+            return;
 
+            Task<bool> NoneFuncAsync() => Task.FromResult(true);
+
+            bool SomeFunc(int value) => false;
         }
 
         [Fact]
@@ -146,7 +145,7 @@ namespace Funx.Tests
         {
             Option<string> someOpt = Some("fake");
 
-            var someCalled = someOpt.Match(() => false, v => true);
+            var someCalled = someOpt.Match(() => false, _ => true);
 
             Assert.True(someCalled);
         }
@@ -177,11 +176,11 @@ namespace Funx.Tests
             object obj1 = Some(1);
             object obj2 = Some(2);
 
-            object objNone = (Option<int>)Helpers.None;
-            object objNoneStr = (Option<string>)Helpers.None;
+            object objNone = (Option<int>)Factories.None;
+            object objNoneStr = (Option<string>)Factories.None;
 
             var some = Some(1);
-            Option<int> none = Helpers.None;
+            Option<int> none = Factories.None;
 
             Assert.True(some.Equals(obj1));
             Assert.False(some.Equals(obj2));
@@ -195,8 +194,8 @@ namespace Funx.Tests
         [Fact]
         public void ShouldTwoNoneValuesOrNullBeEqual()
         {
-            var first = (Option<int>) Helpers.None;
-            var other = (Option<int>) Helpers.None;
+            var first = (Option<int>) Factories.None;
+            var other = (Option<int>) Factories.None;
 
             var actual = first.Equals(other);
 
@@ -206,7 +205,7 @@ namespace Funx.Tests
         [Fact]
         public void ShouldNoneAndSomeNotBeEqual()
         {
-            var first = (Option<int>) Helpers.None;
+            var first = (Option<int>) Factories.None;
             var other = Some(1);
 
             var actual = first.Equals(other);
@@ -217,8 +216,8 @@ namespace Funx.Tests
         [Fact]
         public void ShouldEqualityOperatorReturnCorrectOnOptionTypes()
         {
-            var firstNone = (Option<int>) Helpers.None;
-            var otherNone = (Option<int>) Helpers.None;
+            var firstNone = (Option<int>) Factories.None;
+            var otherNone = (Option<int>) Factories.None;
 
             var firstSome = Some(1);
             var otherSome = Some(1);
@@ -239,8 +238,8 @@ namespace Funx.Tests
         [Fact]
         public void ShouldInEqualityOperatorReturnCorrectOnOptionTypes()
         {
-            var firstNone = (Option<int>) Helpers.None;
-            var otherNone = (Option<int>) Helpers.None;
+            var firstNone = (Option<int>) Factories.None;
+            var otherNone = (Option<int>) Factories.None;
 
             var firstSome = Some(1);
             var otherSome = Some(1);
@@ -261,7 +260,7 @@ namespace Funx.Tests
         [Fact]
         public void ShouldEqualityOperatorReturnTrueOnOptionAndPrimitiveTypes()
         {
-            Option<string> none = Helpers.None;
+            Option<string> none = Factories.None;
             var firstSome = Some("1");
             string str = null; // equals to None
 
@@ -284,7 +283,7 @@ namespace Funx.Tests
         [Fact]
         public void ShouldInEqualityOperatorReturnTrueOnOptionAndPrimitiveTypes()
         {
-            Option<string> none = Helpers.None;
+            Option<string> none = Factories.None;
             var firstSome = Some("1");
             string str = null; // equals to None
 
@@ -307,11 +306,11 @@ namespace Funx.Tests
         [Fact]
         public void ToString_ShouldPrintNoneWhenNone()
         {
-            var none = (Option<int>)Helpers.None;
-            var nonePure = Helpers.None;
+            var none = (Option<int>)Factories.None;
+            var nonePure = Factories.None;
 
-            Assert.Equal(none.ToString() , $"None");
-            Assert.Equal(nonePure.ToString() , $"None");
+            Assert.Equal($"None", none.ToString() );
+            Assert.Equal($"None", nonePure.ToString() );
 
         }
 
@@ -320,7 +319,7 @@ namespace Funx.Tests
         {
             var none = Some(1);
             
-            Assert.Equal(none.ToString() , $"Some(1)");
+            Assert.Equal("Some(1)", none.ToString() );
         }
 
         [Fact]
@@ -328,7 +327,7 @@ namespace Funx.Tests
         {
             var none = new None();
 
-            Option<int> optStr = Helpers.None;
+            Option<int> optStr = Factories.None;
 
             var isEqual = optStr.Equals(none);
 
@@ -357,7 +356,7 @@ namespace Funx.Tests
 
             var result = from s in someStr select s.ToUpper();
 
-            Assert.False(result == Funx.Helpers.None);
+            Assert.False(result == Factories.None);
             Assert.Equal("VALUE", result);
 
         }
@@ -365,11 +364,11 @@ namespace Funx.Tests
         [Fact]
         public void Select_should_map_an_option_to_None_when_option_is_none()
         {
-            Option<string> none = Helpers.None;
+            Option<string> none = Factories.None;
 
             var result = from s in none select s.ToUpper();
 
-            Assert.True(result == Funx.Helpers.None);
+            Assert.True(result == Factories.None);
         }
 
         [Fact]
@@ -410,7 +409,7 @@ namespace Funx.Tests
             {
                 isCalled = true;
                 return Task.CompletedTask;
-            }).ConfigureAwait(false);
+            });
 
             Assert.True(isCalled);
         }
@@ -425,7 +424,7 @@ namespace Funx.Tests
             {
                 isCalled = true;
                 return Task.CompletedTask;
-            }).ConfigureAwait(false);
+            });
 
             Assert.False(isCalled);
         }
@@ -453,7 +452,7 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            none.WhenSome((v) =>
+            none.WhenSome( _ =>
             {
                 isCalled = true;
             });
@@ -473,7 +472,7 @@ namespace Funx.Tests
                 isCalled = true;
                 Assert.Equal(1,v);
                 return Task.CompletedTask;
-            }).ConfigureAwait(false); 
+            }); 
 
             Assert.True(isCalled);
         }
@@ -484,11 +483,11 @@ namespace Funx.Tests
 
             var isCalled = false;
 
-            await none.WhenSomeAsync((v) =>
+            await none.WhenSomeAsync((_) =>
             {
                 isCalled = true;
                 return Task.CompletedTask;
-            }).ConfigureAwait(false);
+            });
 
             Assert.False(isCalled);
         }
@@ -498,7 +497,7 @@ namespace Funx.Tests
         {
             var options = Option<int>.Some(11);
 
-            var either = options.ToEither<string>(() => "invalid number");
+            var either = options.ToEither(() => "invalid number");
 
             either.WhenRight(v => Assert.Equal(11, v));
             either.WhenLeft(_ => Assert.False(true));
@@ -509,9 +508,9 @@ namespace Funx.Tests
         {
             var options = Option<int>.None;
 
-            var either = options.ToEither<string>(() => "invalid number");
+            var either = options.ToEither(() => "invalid number");
 
-            either.WhenRight(v => Assert.True(false));
+            either.WhenRight(_ => Assert.True(false));
             either.WhenLeft(msg => Assert.Equal("invalid number" , msg));
         }
 
@@ -529,7 +528,7 @@ namespace Funx.Tests
         [Fact]
         public void Unwrap_should_return_the_provided_default_when_none()
         {
-            Option<int> option = Helpers.None;
+            Option<int> option = Factories.None;
 
             var value = option.Unwrap(11);
 
@@ -548,7 +547,7 @@ namespace Funx.Tests
         [Fact]
         public void Unwrap_should_call_the_default_factory_when_none()
         {
-            Option<int> option = Helpers.None;
+            Option<int> option = Factories.None;
 
             var value = option.Unwrap(() => 11);
 
@@ -567,10 +566,9 @@ namespace Funx.Tests
         [Fact]
         public async Task UnwrapAsync_should_call_the_default_factory_when_none()
         {
-            Option<int> option = Helpers.None;
+            Option<int> option = Factories.None;
 
-            var value = await option.UnwrapAsync(() => Task.FromResult(11))
-                .ConfigureAwait(false);
+            var value = await option.UnwrapAsync(() => Task.FromResult(11));
 
             Assert.Equal(11,value);
         }
@@ -579,8 +577,7 @@ namespace Funx.Tests
         {
             Option<int> option = 11;
 
-            var value = await option.UnwrapAsync(() => Task.FromResult(0))
-                .ConfigureAwait(false);
+            var value = await option.UnwrapAsync(() => Task.FromResult(0));
 
             value.Should().Be(11);
         }
@@ -609,28 +606,6 @@ namespace Funx.Tests
             either.IsLeft.Should().BeTrue();
             either.WhenLeft(v => v.Should().Be("invalid value"));
 
-        }
-
-        [Fact]
-        public void ToExceptional_should_return_a_Failed_Exceptional_when_None()
-        {
-            Option<int> option = Helpers.None;
-
-            var exceptional = option.ToExceptional(new InvalidOperationException("invalid"));
-
-            exceptional.IsException.Should().BeTrue();
-            exceptional.OnException(ex=>ex.Message.Should().Be("invalid"));
-        }
-        
-        [Fact]
-        public void ToExceptional_should_return_a_Successful_Exceptional_when_success()
-        {
-            Option<int> option = 11;
-
-            var exceptional = option.ToExceptional(new InvalidOperationException("invalid"));
-
-            exceptional.IsSuccess.Should().BeTrue();
-            exceptional.OnSuccess(v => v.Should().Be(11));
         }
 
     }

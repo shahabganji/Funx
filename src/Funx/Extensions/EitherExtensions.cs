@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using static Funx.Helpers;
+using static Funx.Factories;
 using Unit = System.ValueTuple;
 
 namespace Funx.Extensions
@@ -33,16 +31,6 @@ namespace Funx.Extensions
             => either.Match(
                 _ => None, 
                 f);
-        
-        public static Validation<T> ToValidation<T>(this Either<Error, T> either)
-            => either.Match<Validation<T>>(
-                error => error,
-                data => data);
-        
-        public static Validation<T> ToValidation<T>(this Either<IEnumerable<Error>, T> either)
-            => either.Match<Validation<T>>(
-                errors => errors.ToArray(),
-                data => data);
         
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static Funx.Helpers;
+using static Funx.Factories;
 using Unit = System.ValueTuple;
 
 namespace Funx.Extensions

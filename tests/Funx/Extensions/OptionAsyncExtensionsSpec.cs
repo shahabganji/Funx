@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Funx.Extensions;
-using static Funx.Helpers;
+using static Funx.Factories;
 using Xunit;
 
 namespace Funx.Tests.Extensions
@@ -91,26 +91,28 @@ namespace Funx.Tests.Extensions
         [Fact]
         public async Task BindAsync_should_stay_in_the_same_abstraction()
         {
-            Task<Option<string>> ToUpper(string s) => Task.FromResult(Some(s.ToUpper()));
-
             var strOption = Task.FromResult(Some("value"));
 
             var result = await strOption.BindAsync(ToUpper).ConfigureAwait(false);
 
             Assert.NotEqual(result, None);
             result.ForEach(x => Assert.Equal(x, $"VALUE"));
+            return;
+
+            Task<Option<string>> ToUpper(string s) => Task.FromResult(Some(s.ToUpper()));
         }
 
         [Fact]
         public async Task BindAsync_should_return_None_when_Not_matched()
         {
-            Task<Option<string>> ToUpper(string s) => Task.FromResult(Some(s.ToUpper()));
-
             var strOption = Task.FromResult<Option<string>>(None);
 
             var result = await strOption.BindAsync(ToUpper).ConfigureAwait(false);
 
             Assert.Equal(result, None);
+            return;
+
+            Task<Option<string>> ToUpper(string s) => Task.FromResult(Some(s.ToUpper()));
         }
 
         [Fact]

@@ -8,9 +8,9 @@ namespace Funx
 {
     public readonly struct Option<T> : IEquatable<None>, IEquatable<Option<T>>
     {
-        public static Option<T> None => Helpers.None;
-        public static Option<T> Some(T value) => Helpers.Some(value);
-
+        public static Option<T> None => Factories.None;
+        public static Option<T> Some(T value) => Factories.Some(value);
+        
         private readonly T _value;
         public T UnwrappedValue => this.IsNone
             ? throw new InvalidOperationException(
@@ -28,7 +28,7 @@ namespace Funx
         }
 
         public static implicit operator Option<T>(T value)
-            => value == null ? Helpers.None : Some(value);
+            => value == null ? Factories.None : Some(value);
 
         public static implicit operator Option<T>(None _) => new();
         public static implicit operator Option<T>(Some<T> some) => new(some.Value);
@@ -41,16 +41,16 @@ namespace Funx
 
         public Task<TR> MatchAsync<TR>(Func<TR> none, Func<T, Task<TR>> someAsync)
         {
-            Task<TR> AdapterNoneAsync() => Task.FromResult(none());
-
             return this.MatchAsync(AdapterNoneAsync, someAsync);
+
+            Task<TR> AdapterNoneAsync() => Task.FromResult(none());
         }
 
         public Task<TR> MatchAsync<TR>(Func<Task<TR>> noneAsync, Func<T, TR> some)
         {
-            Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
-
             return this.MatchAsync(noneAsync, AdapterSomeAsync);
+
+            Task<TR> AdapterSomeAsync(T t) => Task.FromResult(some(t));
         }
 
 
@@ -79,13 +79,7 @@ namespace Funx
 
         public Either<L, T> ToEither<L>(Func<L> leftFactory)
             => this.Match<Either<L, T>>(() => leftFactory(), v => v);
-
-        public Exceptional<T> ToExceptional(Exception exception)
-            => this.Match<Exceptional<T>>(
-                () => exception,
-                v => v);
-
-
+        
         public IEnumerable<T> AsEnumerable()
         {
             if (this.IsSome)
