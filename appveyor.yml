@@ -47,7 +47,7 @@ for:
 -
   branches:
     only:
-      - /\d*\.\d*\.\d*/
+      - /\d+\.\d+\.\d+/
 
   configuration: Release
 
