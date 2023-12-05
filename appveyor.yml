@@ -45,7 +45,7 @@ test_script:
     
 after_test:
   - ps: dotnet build src/Funx/Funx.csproj -c Release
-  - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ./publish
+  - ps: dotnet pack src/Funx/Funx.csproj --no-restore --no-build -c Release -o ./publish --version-suffix 8.0.0
   - ps: ls ./publish
 
 artifacts:
