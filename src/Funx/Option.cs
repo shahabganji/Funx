@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Funx.Option;
-using Unit = System.ValueTuple;
 
 namespace Funx
 {
